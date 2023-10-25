@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 
 export default class Main extends Component {
-  render() {
+  render(): ReactNode {
     return <main>Main</main>;
   }
 }
