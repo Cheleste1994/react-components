@@ -17,7 +17,7 @@ export default class Header extends Component<AppProps, AppState> {
   componentDidUpdate(prevProps: AppProps) {
     if (this.props.dataRoot !== prevProps.dataRoot) {
       this.setState({
-        dataRoot: prevProps.dataRoot,
+        dataRoot: this.props.dataRoot,
         isLoading: false,
       });
     }
@@ -39,7 +39,9 @@ export default class Header extends Component<AppProps, AppState> {
       event?: React.KeyboardEvent<HTMLInputElement>
     ) => {
       if (!event || event?.code === 'Enter') {
-        this.props.updateInputValue?.(this.state.inputValue?.trim() || '');
+        if (this.props.selectValue) {
+          this.props.updateInputValue?.(this.state.inputValue?.trim() || '');
+        }
       }
     };
 

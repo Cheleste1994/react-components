@@ -33,13 +33,15 @@ class App extends Component<AppProps, AppState> {
   }
 
   async componentDidMount() {
-    const dataRoot = await makeRequest<RootApi>('GET', baseUrl).catch(
+    const responseRoot = await makeRequest<RootApi>('GET', baseUrl).catch(
       (error) => {
         throw new Error(`Error server: ${error}`);
       }
     );
-    if (dataRoot.data) {
-      this.setState({ dataRoot: dataRoot.data });
+
+    if (responseRoot.data) {
+      console.log(responseRoot);
+      this.setState({ dataRoot: responseRoot.data });
     }
 
     if (this.state.selectValue) {
@@ -132,6 +134,7 @@ class App extends Component<AppProps, AppState> {
         });
       }
     };
+
     return (
       <>
         <Header
