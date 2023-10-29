@@ -40,8 +40,6 @@ export default class Header extends Component<AppProps, AppState> {
     ) => {
       if (!event || event?.code === 'Enter') {
         this.props.updateInputValue?.(this.state.inputValue || '');
-
-        this.setState({ inputValue: '' });
       }
     };
 

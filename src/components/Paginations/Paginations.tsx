@@ -18,7 +18,7 @@ export default class Paginations extends Component<{
 }> {
   render() {
     return (
-      <div className={styles.paginations}>
+      <div className={`paginations ${styles.paginations}`}>
         <button
           onClick={() =>
             this.props.handlePaginations?.(

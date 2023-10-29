@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
 
-  > div:not(:last-child) {
+  > div:not(:global .paginations) {
     display: flex;
     flex-direction: column;
     justify-content: center;
