@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ApiResponse, AppProps, Species } from '../../types/interface';
+import LogoLoad from '../LogoLoad/LogoLoad';
 import styles from '../Main/main.module.scss';
 
 export default class SpeciesCard extends Component<AppProps> {
@@ -25,7 +26,7 @@ export default class SpeciesCard extends Component<AppProps> {
               <span>{el.created}</span>
             </div>
           )
-        ) || 'Loading...'}
+        ) || <LogoLoad />}
       </div>
     );
   }

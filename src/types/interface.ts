@@ -21,6 +21,7 @@ export interface AppState {
   isLoading?: boolean;
   inputValue?: string;
   selectValue?: string;
+  isError?: boolean;
 }
 
 export interface ErrorBoundaryProps {

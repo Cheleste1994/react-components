@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import makeRequest from './api/data-service';
 import './App.scss';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import ErrorComponent from './components/ErrorComponent';
 import Header from './components/Header/Header';
 import Main from './components/Main/Main';
 import {
@@ -28,11 +28,16 @@ class App extends Component<AppProps, AppState> {
       selectValue: localStorage.getItem('selectValue') || '',
       dataResponse: undefined,
       isLoading: false,
+      isError: false,
     };
   }
 
   async componentDidMount() {
-    const dataRoot = await makeRequest<RootApi>('GET', baseUrl);
+    const dataRoot = await makeRequest<RootApi>('GET', baseUrl).catch(
+      (error) => {
+        throw new Error(`Error server: ${error}`);
+      }
+    );
     if (dataRoot.data) {
       this.setState({ dataRoot: dataRoot.data });
     }
@@ -41,7 +46,9 @@ class App extends Component<AppProps, AppState> {
       const { data } = await makeRequest(
         'GET',
         `${baseUrl}/${this.state.selectValue}/?search=${this.state.inputValue}`
-      );
+      ).catch((error) => {
+        throw new Error(`Error server: ${error}`);
+      });
       if (data) {
         this.setState({
           dataResponse: data as ApiResponse<
@@ -59,7 +66,9 @@ class App extends Component<AppProps, AppState> {
       const { data } = await makeRequest(
         'GET',
         `${baseUrl}/${this.state.selectValue}`
-      );
+      ).catch((error) => {
+        throw new Error(`Error server: ${error}`);
+      });
       if (data) {
         this.setState({
           dataResponse: data as ApiResponse<
@@ -71,12 +80,15 @@ class App extends Component<AppProps, AppState> {
       }
       this.setState({ isLoading: false });
     }
+
     if (this.state.inputValue !== prevState.inputValue) {
       this.setState({ isLoading: true });
       const { data } = await makeRequest(
         'GET',
         `${baseUrl}/${this.state.selectValue}/?search=${this.state.inputValue}`
-      );
+      ).catch((error) => {
+        throw new Error(`Error server: ${error}`);
+      });
       if (data) {
         this.setState({
           dataResponse: data as ApiResponse<
@@ -89,6 +101,10 @@ class App extends Component<AppProps, AppState> {
       this.setState({ isLoading: false });
     }
   }
+
+  simulateError = () => {
+    this.setState({ isError: true });
+  };
 
   render(): ReactNode {
     const updateSelectValue = (value: string) => {
@@ -103,7 +119,10 @@ class App extends Component<AppProps, AppState> {
       this.setState({
         isLoading: true,
       });
-      const { data } = await makeRequest('GET', value);
+      const { data } = await makeRequest('GET', value).catch((error) => {
+        alert(`Error server: ${error}`);
+        throw new Error(`Error server: ${error}`);
+      });
       if (data) {
         this.setState({
           dataResponse: data as ApiResponse<
@@ -114,25 +133,30 @@ class App extends Component<AppProps, AppState> {
       }
     };
     return (
-      <ErrorBoundary>
-        <>
-          <Header
-            dataRoot={this.state.dataRoot}
-            inputValue={this.state.inputValue}
-            selectValue={this.state.selectValue}
-            updateInputValue={updateInputValue}
-            updateSelectValue={updateSelectValue}
-          />
-          <Main
-            dataRoot={this.state.dataRoot}
-            dataResponse={this.state.dataResponse}
-            inputValue={this.state.inputValue}
-            selectValue={this.state.selectValue}
-            handlePaginations={handlePaginations}
-            isLoading={this.state.isLoading}
-          />
-        </>
-      </ErrorBoundary>
+      <>
+        <Header
+          dataRoot={this.state.dataRoot}
+          inputValue={this.state.inputValue}
+          selectValue={this.state.selectValue}
+          updateInputValue={updateInputValue}
+          updateSelectValue={updateSelectValue}
+        />
+        <Main
+          dataRoot={this.state.dataRoot}
+          dataResponse={this.state.dataResponse}
+          inputValue={this.state.inputValue}
+          selectValue={this.state.selectValue}
+          handlePaginations={handlePaginations}
+          isLoading={this.state.isLoading}
+        />
+        <div className="btn__error">
+          <button onClick={this.simulateError}>
+            Simulate <br /> Error
+          </button>
+
+          {this.state.isError ? <ErrorComponent /> : ''}
+        </div>
+      </>
     );
   }
 }
