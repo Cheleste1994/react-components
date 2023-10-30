@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   ApiResponse,
   Film,
@@ -10,34 +10,29 @@ import {
 } from '../../types/interface';
 import styles from './Paginations.module.scss';
 
-export default class Paginations extends Component<{
+export default function Paginations({
+  handlePaginations,
+  dataResponse,
+}: {
   handlePaginations?: (value: string) => void;
   dataResponse?: ApiResponse<
     People | Film | Starship | Vehicle | Species | Planet
   >;
-}> {
-  render() {
-    return (
-      <div className={`paginations ${styles.paginations}`}>
-        <button
-          onClick={() =>
-            this.props.handlePaginations?.(
-              this.props.dataResponse?.previous || ''
-            )
-          }
-          disabled={!this.props.dataResponse?.previous}
-        >
-          Prev
-        </button>
-        <button
-          onClick={() =>
-            this.props.handlePaginations?.(this.props.dataResponse?.next || '')
-          }
-          disabled={!this.props.dataResponse?.next}
-        >
-          Next
-        </button>
-      </div>
-    );
-  }
+}) {
+  return (
+    <div className={`paginations ${styles.paginations}`}>
+      <button
+        onClick={() => handlePaginations?.(dataResponse?.previous || '')}
+        disabled={!dataResponse?.previous}
+      >
+        Prev
+      </button>
+      <button
+        onClick={() => handlePaginations?.(dataResponse?.next || '')}
+        disabled={!dataResponse?.next}
+      >
+        Next
+      </button>
+    </div>
+  );
 }
