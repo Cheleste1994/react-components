@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class ErrorComponent extends Component {
-  componentDidMount() {
-    throw new Error('This is a sample error for testing purposes.');
-  }
+function ErrorComponent() {
+  throw new Error('This is a sample error for testing purposes.');
 
-  render() {
-    return <div />;
-  }
+  return <div />;
 }
 
 export default ErrorComponent;
