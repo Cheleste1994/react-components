@@ -40,7 +40,6 @@ class App extends Component<AppProps, AppState> {
     );
 
     if (responseRoot.data) {
-      console.log(responseRoot);
       this.setState({ dataRoot: responseRoot.data });
     }
 
