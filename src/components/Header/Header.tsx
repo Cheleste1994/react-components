@@ -3,8 +3,6 @@ import { AppProps, AppState } from '../../types/interface';
 import styles from './Header.module.scss';
 import svg from '../../assets/search.svg';
 
-// extends Component<AppProps, AppState>
-
 export default function Header({
   dataRoot,
   selectValue,
