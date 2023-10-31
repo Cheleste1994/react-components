@@ -9,58 +9,21 @@ import VehicleCard from './VehicleCard';
 
 export default function CardBySelectValue({
   selectValue,
-  dataResponse,
-  isLoading,
+  dataSearch,
 }: AppProps) {
   switch (selectValue) {
     case 'people':
-      return (
-        <PeopleCard
-          dataRoot={null}
-          dataResponse={dataResponse}
-          isLoading={isLoading}
-        />
-      );
+      return <PeopleCard dataSearch={dataSearch} />;
     case 'films':
-      return (
-        <FilmCard
-          dataRoot={null}
-          dataResponse={dataResponse}
-          isLoading={isLoading}
-        />
-      );
+      return <FilmCard dataSearch={dataSearch} />;
     case 'starships':
-      return (
-        <StarshipCard
-          dataRoot={null}
-          dataResponse={dataResponse}
-          isLoading={isLoading}
-        />
-      );
+      return <StarshipCard dataSearch={dataSearch} />;
     case 'vehicles':
-      return (
-        <VehicleCard
-          dataRoot={null}
-          dataResponse={dataResponse}
-          isLoading={isLoading}
-        />
-      );
+      return <VehicleCard dataSearch={dataSearch} />;
     case 'species':
-      return (
-        <SpeciesCard
-          dataRoot={null}
-          dataResponse={dataResponse}
-          isLoading={isLoading}
-        />
-      );
+      return <SpeciesCard dataSearch={dataSearch} />;
     case 'planets':
-      return (
-        <PlanetCard
-          dataRoot={null}
-          dataResponse={dataResponse}
-          isLoading={isLoading}
-        />
-      );
+      return <PlanetCard dataSearch={dataSearch} />;
     default:
       return null;
   }

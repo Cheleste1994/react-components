@@ -6,25 +6,21 @@ import styles from './Main.module.scss';
 
 export default function Main({
   selectValue,
-  dataResponse,
-  isLoading,
+  dataSearch,
   handlePaginations,
 }: AppProps) {
   return (
     <main className={styles.main}>
       <>
-        <CardBySelectValue
-          dataRoot={null}
-          selectValue={selectValue}
-          dataResponse={dataResponse}
-          isLoading={isLoading}
-        />
-        {!dataResponse || dataResponse.count <= dataResponse.results.length ? (
+        <CardBySelectValue selectValue={selectValue} dataSearch={dataSearch} />
+        {!dataSearch?.dataResponse ||
+        dataSearch.dataResponse?.count <=
+          dataSearch?.dataResponse?.results?.length ? (
           ''
         ) : (
           <Paginations
             handlePaginations={handlePaginations}
-            dataResponse={dataResponse}
+            dataResponse={dataSearch.dataResponse}
           />
         )}
       </>

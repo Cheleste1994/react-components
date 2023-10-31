@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import makeRequest from './api/data-service';
 import './App.scss';
 import ErrorComponent from './components/ErrorComponent';
@@ -6,8 +6,7 @@ import Header from './components/Header/Header';
 import Main from './components/Main/Main';
 import {
   ApiResponse,
-  AppProps,
-  AppState,
+  ApiResponseState,
   Film,
   People,
   Planet,
@@ -19,148 +18,122 @@ import {
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-class App extends Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props);
-    this.state = {
-      dataRoot: null,
-      inputValue: localStorage.getItem('inputValue') || '',
-      selectValue: localStorage.getItem('selectValue') || '',
-      dataResponse: undefined,
-      isLoading: false,
-      isError: false,
-    };
-  }
+function App() {
+  const [dataRoot, setDataRoot] = useState<null | RootApi>(null);
 
-  async componentDidMount() {
-    const responseRoot = await makeRequest<RootApi>('GET', baseUrl).catch(
-      (error) => {
-        throw new Error(`Error server: ${error}`);
-      }
-    );
+  const [dataSearch, setDataSearch] = useState<
+    ApiResponseState<People | Film | Starship | Vehicle | Species | Planet>
+  >({
+    isLoading: false,
+    dataResponse: null,
+  });
 
-    if (responseRoot.data) {
-      this.setState({ dataRoot: responseRoot.data });
+  const [selectValue, setSelectValue] = useState<string>(
+    localStorage.getItem('selectValue') || ''
+  );
+  const [inputValue, setInputValue] = useState<string>(
+    localStorage.getItem('inputValue') || ''
+  );
+
+  const [isError, setIsError] = useState<boolean>(false);
+
+  const fetchDataWithSearchAndInput = useCallback(() => {
+    setDataSearch({ dataResponse: null, isLoading: true });
+
+    const url = new URL(baseUrl);
+    if (selectValue) {
+      url.pathname += `/${selectValue}`;
+      url.searchParams.set('search', inputValue);
     }
-
-    if (this.state.selectValue) {
-      const { data } = await makeRequest(
-        'GET',
-        `${baseUrl}/${this.state.selectValue}/?search=${this.state.inputValue}`
-      ).catch((error) => {
-        throw new Error(`Error server: ${error}`);
-      });
-      if (data) {
-        this.setState({
-          dataResponse: data as ApiResponse<
-            People | Film | Starship | Vehicle | Species | Planet
-          >,
-          isLoading: false,
-        });
-      }
-    }
-  }
-
-  async componentDidUpdate(_: AppProps, prevState: AppState) {
-    if (this.state.selectValue !== prevState.selectValue) {
-      this.setState({ isLoading: true });
-      const { data } = await makeRequest(
-        'GET',
-        `${baseUrl}/${this.state.selectValue}`
-      ).catch((error) => {
+    makeRequest('GET', url.href)
+      .then(({ data }) => {
+        if (data) {
+          setDataSearch({
+            dataResponse: data as ApiResponse<
+              People | Film | Starship | Vehicle | Species | Planet
+            >,
+            isLoading: false,
+          });
+          localStorage.setItem('inputValue', inputValue || '');
+          localStorage.setItem('selectValue', selectValue || '');
+        }
+      })
+      .catch((error) => {
         throw new Error(`Error server: ${error}`);
       });
-      if (data) {
-        this.setState({
-          dataResponse: data as ApiResponse<
-            People | Film | Starship | Vehicle | Species | Planet
-          >,
-        });
-        localStorage.setItem('inputValue', this.state.inputValue || '');
-        localStorage.setItem('selectValue', this.state.selectValue || '');
-      }
-      this.setState({ isLoading: false });
-    }
+  }, [inputValue, selectValue]);
 
-    if (this.state.inputValue !== prevState.inputValue) {
-      this.setState({ isLoading: true });
-      const { data } = await makeRequest(
-        'GET',
-        `${baseUrl}/${this.state.selectValue}/?search=${this.state.inputValue}`
-      ).catch((error) => {
-        throw new Error(`Error server: ${error}`);
-      });
-      if (data) {
-        this.setState({
-          dataResponse: data as ApiResponse<
-            People | Film | Starship | Vehicle | Species | Planet
-          >,
+  useEffect(() => {
+    if (!dataRoot) {
+      makeRequest<RootApi>('GET', baseUrl)
+        .then(({ data }) => {
+          if (data) {
+            setDataRoot(data || null);
+          }
+        })
+        .catch((error) => {
+          throw new Error(`Error server: ${error}`);
         });
-        localStorage.setItem('inputValue', this.state.inputValue || '');
-        localStorage.setItem('selectValue', this.state.selectValue || '');
-      }
-      this.setState({ isLoading: false });
     }
-  }
+  }, [dataRoot]);
 
-  simulateError = () => {
-    this.setState({ isError: true });
+  useEffect(() => {
+    fetchDataWithSearchAndInput();
+  }, [fetchDataWithSearchAndInput]);
+
+  const simulateError = () => {
+    setIsError(true);
   };
 
-  render(): ReactNode {
-    const updateSelectValue = (value: string) => {
-      this.setState({ selectValue: value });
-    };
+  const updateSelectValue = (value: string) => {
+    setDataSearch({ dataResponse: null, isLoading: true });
+    setSelectValue(value);
+    setInputValue('');
+  };
 
-    const updateInputValue = (value: string) => {
-      this.setState({ inputValue: value });
-    };
+  const updateInputValue = (value: string) => {
+    setInputValue(value);
+  };
 
-    const handlePaginations = async (value: string) => {
-      this.setState({
-        isLoading: true,
+  const handlePaginations = async (value: string) => {
+    setDataSearch({ ...dataSearch, isLoading: true });
+
+    const { data } = await makeRequest('GET', value).catch((error) => {
+      alert(`Error server: ${error}`);
+      throw new Error(`Error server: ${error}`);
+    });
+    if (data) {
+      setDataSearch({
+        dataResponse: data as ApiResponse<
+          People | Film | Starship | Vehicle | Species | Planet
+        >,
+        isLoading: false,
       });
-      const { data } = await makeRequest('GET', value).catch((error) => {
-        alert(`Error server: ${error}`);
-        throw new Error(`Error server: ${error}`);
-      });
-      if (data) {
-        this.setState({
-          dataResponse: data as ApiResponse<
-            People | Film | Starship | Vehicle | Species | Planet
-          >,
-          isLoading: false,
-        });
-      }
-    };
+    }
+  };
 
-    return (
-      <>
-        <Header
-          dataRoot={this.state.dataRoot}
-          inputValue={this.state.inputValue}
-          selectValue={this.state.selectValue}
-          updateInputValue={updateInputValue}
-          updateSelectValue={updateSelectValue}
-        />
-        <Main
-          dataRoot={this.state.dataRoot}
-          dataResponse={this.state.dataResponse}
-          inputValue={this.state.inputValue}
-          selectValue={this.state.selectValue}
-          handlePaginations={handlePaginations}
-          isLoading={this.state.isLoading}
-        />
-        <div className="btn__error">
-          <button onClick={this.simulateError}>
-            Simulate <br /> Error
-          </button>
+  return (
+    <>
+      <Header
+        dataRoot={dataRoot}
+        selectValue={selectValue}
+        updateInputValue={updateInputValue}
+        updateSelectValue={updateSelectValue}
+      />
+      <Main
+        dataSearch={dataSearch}
+        selectValue={selectValue}
+        handlePaginations={handlePaginations}
+      />
+      <div className="btn__error">
+        <button onClick={simulateError}>
+          Simulate <br /> Error
+        </button>
 
-          {this.state.isError ? <ErrorComponent /> : ''}
-        </div>
-      </>
-    );
-  }
+        {isError ? <ErrorComponent /> : ''}
+      </div>
+    </>
+  );
 }
 
 export default App;

@@ -7,7 +7,7 @@ import './index.scss';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <App dataRoot={null} />
+      <App />
     </ErrorBoundary>
   </React.StrictMode>
 );

@@ -1,27 +1,19 @@
 import { ReactChild } from 'react';
 
 export interface AppProps {
-  dataRoot: RootApi | null;
-  dataResponse?:
-    | undefined
-    | ApiResponse<People | Film | Starship | Vehicle | Species | Planet>;
-  inputValue?: string | undefined;
+  dataRoot?: RootApi | null;
+  dataSearch?: ApiResponseState<
+    People | Film | Starship | Vehicle | Species | Planet
+  >;
   selectValue?: string | undefined;
-  isLoading?: boolean;
   updateInputValue?: (value: string) => void;
   updateSelectValue?: (value: string) => void;
   handlePaginations?: (value: string) => void;
 }
 
 export interface AppState {
-  dataRoot: null | RootApi;
-  dataResponse?:
-    | undefined
-    | ApiResponse<People | Film | Starship | Vehicle | Species | Planet>;
+  dataRoot?: null | RootApi;
   isLoading?: boolean;
-  inputValue?: string;
-  selectValue?: string;
-  isError?: boolean;
 }
 
 export interface ErrorBoundaryProps {
@@ -39,6 +31,11 @@ export interface RootApi {
   species: string;
   starships: string;
   vehicles: string;
+}
+
+export interface ApiResponseState<T> {
+  isLoading: boolean;
+  dataResponse: ApiResponse<T> | null;
 }
 
 export interface ApiResponse<T> {

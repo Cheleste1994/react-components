@@ -6,14 +6,12 @@ import svg from '../../assets/search.svg';
 export default function Header({
   dataRoot,
   selectValue,
-  isLoading,
   updateInputValue,
   updateSelectValue,
 }: AppProps) {
   const [state, setState] = useState<AppState>({
     dataRoot: null,
     isLoading: true,
-    selectValue: '',
   });
 
   const [inputValue, setInputValue] = useState(
@@ -42,8 +40,8 @@ export default function Header({
   };
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setState({ ...state, selectValue: event.target.value });
     updateSelectValue?.(event.target.value);
+    setInputValue('');
   };
 
   return (
@@ -66,7 +64,7 @@ export default function Header({
           }
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
-          disabled={isLoading}
+          disabled={!dataRoot}
           onKeyDown={handleSearchClick}
         />
       </div>
