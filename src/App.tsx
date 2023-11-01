@@ -40,8 +40,6 @@ function App() {
 
   const navigate = useNavigate();
 
-  // const [searchParams, setSearchParams] = useSearchParams();
-
   const fetchDataWithSearchAndInput = useCallback(() => {
     setDataSearch({ dataResponse: null, isLoading: true });
 
@@ -49,29 +47,24 @@ function App() {
     if (selectValue) {
       url.pathname += `/${selectValue}`;
       url.searchParams.set('search', inputValue);
+      makeRequest('GET', url.href)
+        .then(({ data }) => {
+          if (data) {
+            setDataSearch({
+              dataResponse: data as ApiResponse<
+                People | Film | Starship | Vehicle | Species | Planet
+              >,
+              isLoading: false,
+            });
+            localStorage.setItem('inputValue', inputValue || '');
+            localStorage.setItem('selectValue', selectValue || '');
+          }
+        })
+        .catch((error) => {
+          throw new Error(`Error server: ${error}`);
+        });
     }
-    makeRequest('GET', url.href)
-      .then(({ data }) => {
-        if (data) {
-          setDataSearch({
-            dataResponse: data as ApiResponse<
-              People | Film | Starship | Vehicle | Species | Planet
-            >,
-            isLoading: false,
-          });
-          localStorage.setItem('inputValue', inputValue || '');
-          localStorage.setItem('selectValue', selectValue || '');
-
-          const params = new URLSearchParams();
-          params.set('search', inputValue);
-          navigate(selectValue);
-          // setSearchParams(params);
-        }
-      })
-      .catch((error) => {
-        throw new Error(`Error server: ${error}`);
-      });
-  }, [inputValue, navigate, selectValue]);
+  }, [inputValue, selectValue]);
 
   useEffect(() => {
     if (!dataRoot) {
@@ -90,6 +83,10 @@ function App() {
   useEffect(() => {
     fetchDataWithSearchAndInput();
   }, [fetchDataWithSearchAndInput]);
+
+  useEffect(() => {
+    navigate(selectValue);
+  }, [navigate, selectValue]);
 
   const simulateError = () => {
     setIsError(true);

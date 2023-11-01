@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import FilmCard from '../components/Cards/FilmCard';
 import PeopleCard from '../components/Cards/PeopleCard';
 import PlanetCard from '../components/Cards/PlanetCard';
@@ -17,43 +17,29 @@ const Router = ({ dataSearch, selectValue, handlePaginations }: AppProps) => (
       path=""
       element={
         <Suspense fallback={<LogoLoad />}>
-          <Outlet />
-        </Suspense>
-      }
-    >
-      <Route
-        path=""
-        element={
           <Home
             dataSearch={dataSearch}
             selectValue={selectValue}
             handlePaginations={handlePaginations}
           />
-        }
-      >
-        <Route
-          path="/people"
-          element={<PeopleCard dataSearch={dataSearch} />}
-        />
-        <Route path="/films" element={<FilmCard dataSearch={dataSearch} />} />
-        <Route
-          path="/starships"
-          element={<StarshipCard dataSearch={dataSearch} />}
-        />
-        <Route
-          path="/vehicles"
-          element={<VehicleCard dataSearch={dataSearch} />}
-        />
-        <Route
-          path="/species"
-          element={<SpeciesCard dataSearch={dataSearch} />}
-        />
-        <Route
-          path="/planets"
-          element={<PlanetCard dataSearch={dataSearch} />}
-        />
-        <Route path="*" element={<h1>404 Not Found</h1>} />
-      </Route>
+        </Suspense>
+      }
+    >
+      <Route path="/people" element={<PeopleCard dataSearch={dataSearch} />} />
+      <Route path="/films" element={<FilmCard dataSearch={dataSearch} />} />
+      <Route
+        path="/starships"
+        element={<StarshipCard dataSearch={dataSearch} />}
+      />
+      <Route
+        path="/vehicles"
+        element={<VehicleCard dataSearch={dataSearch} />}
+      />
+      <Route
+        path="/species"
+        element={<SpeciesCard dataSearch={dataSearch} />}
+      />
+      <Route path="/planets" element={<PlanetCard dataSearch={dataSearch} />} />
     </Route>
   </Routes>
 );

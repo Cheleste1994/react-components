@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AppProps, AppState } from '../../types/interface';
 import styles from './Header.module.scss';
 import svg from '../../assets/search.svg';
+import { useSearchParams } from 'react-router-dom';
 
 export default function Header({
   dataRoot,
@@ -17,6 +18,19 @@ export default function Header({
   const [inputValue, setInputValue] = useState(
     localStorage.getItem('inputValue') || ''
   );
+
+  const [, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (inputValue) {
+      const params = new URLSearchParams();
+      params.set('search', inputValue);
+
+      setSearchParams(params);
+    } else {
+      setSearchParams('');
+    }
+  }, [inputValue, setSearchParams]);
 
   useEffect(() => {
     setState({
