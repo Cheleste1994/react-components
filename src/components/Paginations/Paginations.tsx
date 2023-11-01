@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   ApiResponse,
   Film,
@@ -19,16 +20,31 @@ export default function Paginations({
     People | Film | Starship | Vehicle | Species | Planet
   >;
 }) {
+  const [linkPage, setLinkPage] = useState('');
+
+  const [, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    setSearchParams(linkPage);
+  }, [linkPage, setSearchParams]);
+
+  const handleButtonCliCk = (value: string) => {
+    handlePaginations?.(value);
+    const url = new URL(value);
+    const searchParams = url.search;
+    setLinkPage(searchParams);
+  };
+
   return (
     <div className={`paginations ${styles.paginations}`}>
       <button
-        onClick={() => handlePaginations?.(dataResponse?.previous || '')}
+        onClick={() => handleButtonCliCk(dataResponse?.previous || '')}
         disabled={!dataResponse?.previous}
       >
         Prev
       </button>
       <button
-        onClick={() => handlePaginations?.(dataResponse?.next || '')}
+        onClick={() => handleButtonCliCk(dataResponse?.next || '')}
         disabled={!dataResponse?.next}
       >
         Next
