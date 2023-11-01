@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import makeRequest from './api/data-service';
 import './App.scss';
 import ErrorComponent from './components/ErrorComponent';
 import Header from './components/Header/Header';
-import Main from './components/Main/Main';
+import Router from './routes';
 import {
   ApiResponse,
   ApiResponseState,
@@ -37,6 +38,10 @@ function App() {
 
   const [isError, setIsError] = useState<boolean>(false);
 
+  const navigate = useNavigate();
+
+  // const [searchParams, setSearchParams] = useSearchParams();
+
   const fetchDataWithSearchAndInput = useCallback(() => {
     setDataSearch({ dataResponse: null, isLoading: true });
 
@@ -56,12 +61,17 @@ function App() {
           });
           localStorage.setItem('inputValue', inputValue || '');
           localStorage.setItem('selectValue', selectValue || '');
+
+          const params = new URLSearchParams();
+          params.set('search', inputValue);
+          navigate(selectValue);
+          // setSearchParams(params);
         }
       })
       .catch((error) => {
         throw new Error(`Error server: ${error}`);
       });
-  }, [inputValue, selectValue]);
+  }, [inputValue, navigate, selectValue]);
 
   useEffect(() => {
     if (!dataRoot) {
@@ -120,7 +130,7 @@ function App() {
         updateInputValue={updateInputValue}
         updateSelectValue={updateSelectValue}
       />
-      <Main
+      <Router
         dataSearch={dataSearch}
         selectValue={selectValue}
         handlePaginations={handlePaginations}

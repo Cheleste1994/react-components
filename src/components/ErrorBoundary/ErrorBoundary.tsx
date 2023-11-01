@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import headerStyles from '../Header/Header.module.scss';
 import LogoLoad from '../LogoLoad/LogoLoad';
-import mainStyles from '../Main/Main.module.scss';
+import mainStyles from '../../routes/HomePage/Home.module.scss';
 
 interface ErrorBoundaryProps {
   children: ReactNode;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ApiResponse, AppProps, Species } from '../../types/interface';
 import LogoLoad from '../LogoLoad/LogoLoad';
-import styles from '../Main/main.module.scss';
+import styles from '../../routes/HomePage/Home.module.scss';
 
 export default function SpeciesCard({ dataSearch }: AppProps) {
   return (

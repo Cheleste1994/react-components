@@ -1,9 +1,10 @@
 import React from 'react';
 import { ApiResponse, AppProps, People } from '../../types/interface';
 import LogoLoad from '../LogoLoad/LogoLoad';
-import styles from '../Main/main.module.scss';
+import styles from '../../routes/HomePage/Home.module.scss';
 
 export default function PeopleCard({ dataSearch }: AppProps) {
+  console.log(dataSearch);
   return (
     <div>
       {(dataSearch?.dataResponse as ApiResponse<People>)?.results?.map(
