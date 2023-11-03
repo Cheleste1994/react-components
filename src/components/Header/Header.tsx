@@ -19,18 +19,19 @@ export default function Header({
     localStorage.getItem('inputValue') || ''
   );
 
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (inputValue) {
-      const params = new URLSearchParams();
-      params.set('search', inputValue);
+    const params = new URLSearchParams(searchParams);
 
+    if (inputValue) {
+      params.set('search', inputValue);
       setSearchParams(params);
     } else {
-      setSearchParams('');
+      params.set('search', inputValue);
+      setSearchParams(params);
     }
-  }, [inputValue, setSearchParams]);
+  }, [inputValue, searchParams, setSearchParams]);
 
   useEffect(() => {
     setState({

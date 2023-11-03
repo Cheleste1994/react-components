@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import FilmCard from '../components/Cards/FilmCard';
+import IdCard from '../components/Cards/idCard/IdCard';
 import PeopleCard from '../components/Cards/PeopleCard';
 import PlanetCard from '../components/Cards/PlanetCard';
 import SpeciesCard from '../components/Cards/SpeciesCard';
@@ -11,7 +12,13 @@ import { AppProps } from '../types/interface';
 
 const Home = lazy(() => import('./HomePage/HomePage'));
 
-const Router = ({ dataSearch, selectValue, handlePaginations }: AppProps) => (
+const Router = ({
+  dataSearch,
+  selectValue,
+  dataIdCard,
+  handlePaginations,
+  updateUrlIdCard,
+}: AppProps) => (
   <Routes>
     <Route
       path=""
@@ -25,21 +32,59 @@ const Router = ({ dataSearch, selectValue, handlePaginations }: AppProps) => (
         </Suspense>
       }
     >
-      <Route path="/people" element={<PeopleCard dataSearch={dataSearch} />} />
-      <Route path="/films" element={<FilmCard dataSearch={dataSearch} />} />
+      <Route
+        path="/people"
+        element={
+          <PeopleCard
+            dataSearch={dataSearch}
+            updateUrlIdCard={updateUrlIdCard}
+          />
+        }
+      >
+        <Route path=":id" element={<IdCard dataIdCard={dataIdCard} />} />
+      </Route>
+      <Route
+        path="/films"
+        element={
+          <FilmCard dataSearch={dataSearch} updateUrlIdCard={updateUrlIdCard} />
+        }
+      />
       <Route
         path="/starships"
-        element={<StarshipCard dataSearch={dataSearch} />}
+        element={
+          <StarshipCard
+            dataSearch={dataSearch}
+            updateUrlIdCard={updateUrlIdCard}
+          />
+        }
       />
       <Route
         path="/vehicles"
-        element={<VehicleCard dataSearch={dataSearch} />}
+        element={
+          <VehicleCard
+            dataSearch={dataSearch}
+            updateUrlIdCard={updateUrlIdCard}
+          />
+        }
       />
       <Route
         path="/species"
-        element={<SpeciesCard dataSearch={dataSearch} />}
+        element={
+          <SpeciesCard
+            dataSearch={dataSearch}
+            updateUrlIdCard={updateUrlIdCard}
+          />
+        }
       />
-      <Route path="/planets" element={<PlanetCard dataSearch={dataSearch} />} />
+      <Route
+        path="/planets"
+        element={
+          <PlanetCard
+            dataSearch={dataSearch}
+            updateUrlIdCard={updateUrlIdCard}
+          />
+        }
+      />
     </Route>
   </Routes>
 );

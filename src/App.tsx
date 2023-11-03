@@ -9,6 +9,7 @@ import {
   ApiResponse,
   ApiResponseState,
   Film,
+  IdResponseState,
   People,
   Planet,
   RootApi,
@@ -29,12 +30,19 @@ function App() {
     dataResponse: null,
   });
 
+  const [dataIdCard, setDataIdCard] = useState<IdResponseState>({
+    isLoading: false,
+    dataId: null,
+  });
+
   const [selectValue, setSelectValue] = useState<string>(
     localStorage.getItem('selectValue') || ''
   );
   const [inputValue, setInputValue] = useState<string>(
     localStorage.getItem('inputValue') || ''
   );
+
+  const [urlIdCard, setUrlIdCard] = useState('');
 
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -66,6 +74,26 @@ function App() {
     }
   }, [inputValue, selectValue]);
 
+  const fetchDataWithId = useCallback(() => {
+    setDataIdCard({ dataId: null, isLoading: true });
+    if (urlIdCard) {
+      makeRequest('GET', urlIdCard).then(({ data }) => {
+        if (data) {
+          setDataIdCard({
+            dataId: data as
+              | People
+              | Film
+              | Starship
+              | Vehicle
+              | Species
+              | Planet,
+            isLoading: false,
+          });
+        }
+      });
+    }
+  }, [urlIdCard]);
+
   useEffect(() => {
     if (!dataRoot) {
       makeRequest<RootApi>('GET', baseUrl)
@@ -85,8 +113,18 @@ function App() {
   }, [fetchDataWithSearchAndInput]);
 
   useEffect(() => {
-    navigate(selectValue);
-  }, [navigate, selectValue]);
+    urlIdCard
+      ? navigate(
+          `${selectValue}/${[...urlIdCard]
+            .filter((x) => Number(x) >= 0)
+            .join('')}`
+        )
+      : navigate(selectValue);
+  }, [navigate, urlIdCard, selectValue]);
+
+  useEffect(() => {
+    fetchDataWithId();
+  }, [fetchDataWithId]);
 
   const simulateError = () => {
     setIsError(true);
@@ -100,6 +138,10 @@ function App() {
 
   const updateInputValue = (value: string) => {
     setInputValue(value);
+  };
+
+  const updateUrlIdCard = (value: string) => {
+    setUrlIdCard(value);
   };
 
   const handlePaginations = async (value: string) => {
@@ -119,6 +161,8 @@ function App() {
     }
   };
 
+  console.log(dataIdCard);
+
   return (
     <>
       <Header
@@ -129,8 +173,10 @@ function App() {
       />
       <Router
         dataSearch={dataSearch}
+        dataIdCard={dataIdCard}
         selectValue={selectValue}
         handlePaginations={handlePaginations}
+        updateUrlIdCard={updateUrlIdCard}
       />
       <div className="btn__error">
         <button onClick={simulateError}>

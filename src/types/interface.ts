@@ -5,10 +5,12 @@ export interface AppProps {
   dataSearch?: ApiResponseState<
     People | Film | Starship | Vehicle | Species | Planet
   >;
+  dataIdCard?: IdResponseState;
   selectValue?: string | undefined;
   updateInputValue?: (value: string) => void;
   updateSelectValue?: (value: string) => void;
   handlePaginations?: (value: string) => void;
+  updateUrlIdCard?: (value: string) => void;
 }
 
 export interface AppState {
@@ -36,6 +38,11 @@ export interface RootApi {
 export interface ApiResponseState<T> {
   isLoading: boolean;
   dataResponse: ApiResponse<T> | null;
+}
+
+export interface IdResponseState {
+  isLoading: boolean;
+  dataId: People | Film | Starship | Vehicle | Species | Planet | null;
 }
 
 export interface ApiResponse<T> {

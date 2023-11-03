@@ -8,7 +8,9 @@ export default function HomePage({ dataSearch, handlePaginations }: AppProps) {
   return (
     <main className={styles.main}>
       <>
-        <Outlet />
+        <div className={`${styles.cards} cards`}>
+          <Outlet />
+        </div>
         {!dataSearch?.dataResponse ||
         dataSearch.dataResponse?.count <=
           dataSearch?.dataResponse?.results?.length ? (

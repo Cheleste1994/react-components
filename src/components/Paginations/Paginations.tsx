@@ -22,17 +22,21 @@ export default function Paginations({
 }) {
   const [linkPage, setLinkPage] = useState('');
 
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    setSearchParams(linkPage);
-  }, [linkPage, setSearchParams]);
+    const pageNumber = new URLSearchParams(linkPage).get('page');
+    const params = new URLSearchParams(searchParams);
+
+    if (pageNumber) {
+      params.set('page', pageNumber);
+    }
+    setSearchParams(params);
+  }, [linkPage, searchParams, setSearchParams]);
 
   const handleButtonCliCk = (value: string) => {
     handlePaginations?.(value);
-    const url = new URL(value);
-    const searchParams = url.search;
-    setLinkPage(searchParams);
+    setLinkPage(value);
   };
 
   return (
