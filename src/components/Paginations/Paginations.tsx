@@ -12,30 +12,26 @@ import {
 import styles from './Paginations.module.scss';
 
 export default function Paginations({
-  handlePaginations,
   dataResponse,
 }: {
-  handlePaginations?: (value: string) => void;
   dataResponse?: ApiResponse<
     People | Film | Starship | Vehicle | Species | Planet
   >;
 }) {
   const [linkPage, setLinkPage] = useState('');
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    const pageNumber = new URLSearchParams(linkPage).get('page');
-    const params = new URLSearchParams(searchParams);
-
-    if (pageNumber) {
-      params.set('page', pageNumber);
+    if (linkPage) {
+      const url = new URL(linkPage);
+      if (url.search) {
+        setSearchParams(url.search);
+      }
     }
-    setSearchParams(params);
-  }, [linkPage, searchParams, setSearchParams]);
+  }, [linkPage, setSearchParams]);
 
   const handleButtonCliCk = (value: string) => {
-    handlePaginations?.(value);
     setLinkPage(value);
   };
 

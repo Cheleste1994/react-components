@@ -6,6 +6,7 @@ export interface AppProps {
     People | Film | Starship | Vehicle | Species | Planet
   >;
   dataIdCard?: IdResponseState;
+  urlIdCard?: string;
   selectValue?: string | undefined;
   updateInputValue?: (value: string) => void;
   updateSelectValue?: (value: string) => void;

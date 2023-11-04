@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { AppProps, AppState } from '../../types/interface';
 import styles from './Header.module.scss';
 import svg from '../../assets/search.svg';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function Header({
   dataRoot,
   selectValue,
-  updateInputValue,
   updateSelectValue,
 }: AppProps) {
   const [state, setState] = useState<AppState>({
@@ -19,19 +18,17 @@ export default function Header({
     localStorage.getItem('inputValue') || ''
   );
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const [, setSearchParams] = useSearchParams();
+
+  const location = useLocation();
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-
-    if (inputValue) {
-      params.set('search', inputValue);
-      setSearchParams(params);
-    } else {
-      params.set('search', inputValue);
-      setSearchParams(params);
+    if (!location.pathname.split('/').join('')) {
+      navigate(selectValue || '');
     }
-  }, [inputValue, searchParams, setSearchParams]);
+  }, [location.pathname, navigate, selectValue]);
 
   useEffect(() => {
     setState({
@@ -49,7 +46,11 @@ export default function Header({
   const handleSearchClick = (event?: React.KeyboardEvent<HTMLInputElement>) => {
     if (!event || event?.code === 'Enter') {
       if (selectValue) {
-        updateInputValue?.(inputValue?.trim() || '');
+        const params = new URLSearchParams();
+
+        params.set('search', inputValue);
+        localStorage.setItem('inputValue', inputValue || '');
+        setSearchParams(params);
       }
     }
   };

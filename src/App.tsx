@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import makeRequest from './api/data-service';
 import './App.scss';
 import ErrorComponent from './components/ErrorComponent';
@@ -9,7 +9,6 @@ import {
   ApiResponse,
   ApiResponseState,
   Film,
-  IdResponseState,
   People,
   Planet,
   RootApi,
@@ -30,19 +29,11 @@ function App() {
     dataResponse: null,
   });
 
-  const [dataIdCard, setDataIdCard] = useState<IdResponseState>({
-    isLoading: false,
-    dataId: null,
-  });
+  const location = useLocation();
 
   const [selectValue, setSelectValue] = useState<string>(
-    localStorage.getItem('selectValue') || ''
+    location.pathname.split('/')[0] || localStorage.getItem('selectValue') || ''
   );
-  const [inputValue, setInputValue] = useState<string>(
-    localStorage.getItem('inputValue') || ''
-  );
-
-  const [urlIdCard, setUrlIdCard] = useState('');
 
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -52,9 +43,11 @@ function App() {
     setDataSearch({ dataResponse: null, isLoading: true });
 
     const url = new URL(baseUrl);
+    const params = new URLSearchParams(location.search);
+
     if (selectValue) {
       url.pathname += `/${selectValue}`;
-      url.searchParams.set('search', inputValue);
+      url.search += params.toString();
       makeRequest('GET', url.href)
         .then(({ data }) => {
           if (data) {
@@ -64,7 +57,6 @@ function App() {
               >,
               isLoading: false,
             });
-            localStorage.setItem('inputValue', inputValue || '');
             localStorage.setItem('selectValue', selectValue || '');
           }
         })
@@ -72,27 +64,7 @@ function App() {
           throw new Error(`Error server: ${error}`);
         });
     }
-  }, [inputValue, selectValue]);
-
-  const fetchDataWithId = useCallback(() => {
-    setDataIdCard({ dataId: null, isLoading: true });
-    if (urlIdCard) {
-      makeRequest('GET', urlIdCard).then(({ data }) => {
-        if (data) {
-          setDataIdCard({
-            dataId: data as
-              | People
-              | Film
-              | Starship
-              | Vehicle
-              | Species
-              | Planet,
-            isLoading: false,
-          });
-        }
-      });
-    }
-  }, [urlIdCard]);
+  }, [location.search, selectValue]);
 
   useEffect(() => {
     if (!dataRoot) {
@@ -112,20 +84,6 @@ function App() {
     fetchDataWithSearchAndInput();
   }, [fetchDataWithSearchAndInput]);
 
-  useEffect(() => {
-    urlIdCard
-      ? navigate(
-          `${selectValue}/${[...urlIdCard]
-            .filter((x) => Number(x) >= 0)
-            .join('')}`
-        )
-      : navigate(selectValue);
-  }, [navigate, urlIdCard, selectValue]);
-
-  useEffect(() => {
-    fetchDataWithId();
-  }, [fetchDataWithId]);
-
   const simulateError = () => {
     setIsError(true);
   };
@@ -133,21 +91,17 @@ function App() {
   const updateSelectValue = (value: string) => {
     setDataSearch({ dataResponse: null, isLoading: true });
     setSelectValue(value);
-    setInputValue('');
+    navigate(`/${value}`);
   };
 
-  const updateInputValue = (value: string) => {
-    setInputValue(value);
-  };
-
-  const updateUrlIdCard = (value: string) => {
-    setUrlIdCard(value);
-  };
-
-  const handlePaginations = async (value: string) => {
+  const handlePaginations = async () => {
     setDataSearch({ ...dataSearch, isLoading: true });
+    const url = new URL(baseUrl);
+    const params = new URLSearchParams(location.search);
+    url.pathname += location.pathname;
+    url.search += params.toString();
 
-    const { data } = await makeRequest('GET', value).catch((error) => {
+    const { data } = await makeRequest('GET', url.href).catch((error) => {
       alert(`Error server: ${error}`);
       throw new Error(`Error server: ${error}`);
     });
@@ -161,22 +115,17 @@ function App() {
     }
   };
 
-  console.log(dataIdCard);
-
   return (
     <>
       <Header
         dataRoot={dataRoot}
         selectValue={selectValue}
-        updateInputValue={updateInputValue}
         updateSelectValue={updateSelectValue}
       />
       <Router
         dataSearch={dataSearch}
-        dataIdCard={dataIdCard}
         selectValue={selectValue}
         handlePaginations={handlePaginations}
-        updateUrlIdCard={updateUrlIdCard}
       />
       <div className="btn__error">
         <button onClick={simulateError}>

@@ -2,18 +2,35 @@ import React from 'react';
 import { ApiResponse, AppProps, People } from '../../types/interface';
 import LogoLoad from '../LogoLoad/LogoLoad';
 import styles from '../../routes/HomePage/Home.module.scss';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 
-export default function PeopleCard({ dataSearch, updateUrlIdCard }: AppProps) {
+export default function PeopleCard({ dataSearch }: AppProps) {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { id } = useParams();
+
+  const handleCLick = (url: string) => {
+    if (id) {
+      navigate(`/${pathname.split('/')[1]}`);
+      return;
+    }
+    navigate(url.split('/').slice(-2).join(''));
+  };
+
+  const handleCliCkClosed = () => {
+    if (id) {
+      navigate(`/${pathname.split('/')[1]}`);
+    }
+  };
   return (
     <>
-      <div>
+      <div onClick={handleCliCkClosed}>
         {(dataSearch?.dataResponse as ApiResponse<People>)?.results?.map(
           (el, index) => (
             <div
               key={`${new Date().getTime()}${index}${Math.random()}`}
               className={dataSearch?.isLoading ? styles.loading : ''}
-              onClick={() => updateUrlIdCard?.(el.url)}
+              onClick={() => handleCLick(el.url)}
             >
               <h3>{el.name}</h3>
               <span className={styles.films}>

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import makeRequest from '../../../api/data-service';
 import {
-  AppProps,
   Film,
+  IdResponseState,
   People,
   Planet,
   Species,
@@ -12,20 +13,43 @@ import {
 import LogoLoad from '../../LogoLoad/LogoLoad';
 import styles from './idCard.module.scss';
 
-export default function IdCard({ dataIdCard }: AppProps) {
-  const [dataId, setDataId] = useState<
-    People | Film | Starship | Vehicle | Species | Planet
-  >();
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  const params = useParams();
+export default function IdCard() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [dataIdCard, setDataIdCard] = useState<IdResponseState>({
+    isLoading: false,
+    dataId: null,
+  });
 
-  console.log(params);
+  const fetchDataWithId = useCallback(() => {
+    if (!dataIdCard.dataId) {
+      setDataIdCard({ dataId: null, isLoading: true });
+      makeRequest('GET', baseUrl + pathname).then(({ data }) => {
+        if (data) {
+          setDataIdCard({
+            dataId: data as
+              | People
+              | Film
+              | Starship
+              | Vehicle
+              | Species
+              | Planet,
+            isLoading: false,
+          });
+        }
+      });
+    }
+  }, [dataIdCard.dataId, pathname]);
 
   useEffect(() => {
-    if (dataIdCard?.dataId) {
-      setDataId(dataIdCard.dataId);
-    }
-  }, [dataIdCard]);
+    fetchDataWithId();
+  }, [fetchDataWithId]);
+
+  const handleClickPrev = () => {
+    navigate(`/${pathname.split('/')[1]}`);
+  };
 
   return (
     <div className={styles.card}>
@@ -33,12 +57,17 @@ export default function IdCard({ dataIdCard }: AppProps) {
         <LogoLoad />
       ) : (
         <div>
-          <h3>{dataId?.created}</h3>
-          <span>
-            Film resource URLs that this person has been in:
-            <div></div>
+          <span className={styles.prev} onClick={handleClickPrev}>
+            ←
           </span>
-          <span>{dataId?.created}</span>
+          <h2>
+            {dataIdCard.dataId && 'title' in dataIdCard.dataId
+              ? dataIdCard.dataId.title
+              : dataIdCard.dataId?.name}
+          </h2>
+          <h3>{dataIdCard.dataId?.url}</h3>
+          <span>{dataIdCard.dataId?.created}</span>
+          <span>{dataIdCard.dataId?.edited}</span>
         </div>
       )}
     </div>

@@ -8,26 +8,37 @@
   justify-content: center;
   border: 5px solid #ffffff8a;
   animation: open 0.3s ease-in-out;
+  position: relative;
+  padding: 20px;
 }
 
-// :global(.cards) {
-//   background-color: red;
-// }
-
 @keyframes open {
-  0% {
-    position: relative;
-    top: 0;
+  from {
     right: -100%;
   }
-
-  20% {
-    position: relative;
-  }
-
-  100% {
-    position: relative;
-    top: 0;
+  to {
     right: 0;
+  }
+}
+
+.prev {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1rem;
+  padding: 0 5px;
+  border: 3px solid #ffffff8a;
+  vertical-align: middle;
+}
+
+:global(.cards):has(.card) {
+  > :not(.card) {
+    opacity: 0.2;
   }
 }
