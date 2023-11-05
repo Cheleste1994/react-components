@@ -1,51 +1,49 @@
 import React from 'react';
-import { ApiResponse, AppProps, Film } from '../../types/interface';
+import { AppProps, ProductList } from '../../types/interface';
 import LogoLoad from '../LogoLoad/LogoLoad';
 import styles from '../../routes/HomePage/Home.module.scss';
-import { useNavigate, useLocation, useParams, Outlet } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 
-export default function FilmCard({ dataSearch }: AppProps) {
+export default function ProductsCard({ dataSearch }: AppProps) {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const { id } = useParams();
 
   const handleCLick = (url: string) => {
     if (id) {
-      navigate(`/${pathname.split('/')[1]}`);
+      navigate(`/`);
       return;
     }
-    navigate(url.split('/').slice(-2).join(''));
+    navigate(url);
   };
 
   const handleCliCkClosed = () => {
     if (id) {
-      navigate(`/${pathname.split('/')[1]}`);
+      navigate('/');
     }
   };
   return (
     <>
       <div onClick={handleCliCkClosed}>
-        {(dataSearch?.dataResponse as ApiResponse<Film>)?.results?.map(
+        {(dataSearch?.dataResponse as ProductList)?.products?.map(
           (el, index) => (
             <div
               key={`${new Date().getTime()}${index}${Math.random()}`}
               className={dataSearch?.isLoading ? styles.loading : ''}
-              onClick={() => handleCLick(el.url)}
+              onClick={() => handleCLick(`${el.id}`)}
             >
               <h3>{el.title}</h3>
-              <span>Director: {el.director}</span>
-              <span>Producer: {el.producer}</span>
+              <h4>{el.brand}</h4>
               <span className={styles.films}>
-                Planet resource URLs that are in this film:
+                Film resource URLs that this person has been in:
                 <div>
-                  {el.planets?.map((planet, index) => (
-                    <div key={`planet-${index}`}>
-                      Planet {index + 1}: <a href={planet}>Link</a>
+                  {el.images?.map((images, index) => (
+                    <div key={`images-${index}`}>
+                      Images {index + 1}: <a href={images}>Link</a>
                     </div>
                   ))}
                 </div>
               </span>
-              <span>{el.created}</span>
+              <span>{el.category}</span>
             </div>
           )
         ) || <LogoLoad />}

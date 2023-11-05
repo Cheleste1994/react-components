@@ -1,15 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import makeRequest from '../../../api/data-service';
-import {
-  Film,
-  IdResponseState,
-  People,
-  Planet,
-  Species,
-  Starship,
-  Vehicle,
-} from '../../../types/interface';
+import { IdResponseState, Product } from '../../../types/interface';
 import LogoLoad from '../../LogoLoad/LogoLoad';
 import styles from './idCard.module.scss';
 
@@ -29,13 +21,7 @@ export default function IdCard() {
       makeRequest('GET', baseUrl + pathname).then(({ data }) => {
         if (data) {
           setDataIdCard({
-            dataId: data as
-              | People
-              | Film
-              | Starship
-              | Vehicle
-              | Species
-              | Planet,
+            dataId: data as Product,
             isLoading: false,
           });
         }
@@ -48,7 +34,7 @@ export default function IdCard() {
   }, [fetchDataWithId]);
 
   const handleClickPrev = () => {
-    navigate(`/${pathname.split('/')[1]}`);
+    navigate(`/`);
   };
 
   return (
@@ -60,14 +46,11 @@ export default function IdCard() {
           <span className={styles.prev} onClick={handleClickPrev}>
             ←
           </span>
-          <h2>
-            {dataIdCard.dataId && 'title' in dataIdCard.dataId
-              ? dataIdCard.dataId.title
-              : dataIdCard.dataId?.name}
-          </h2>
-          <h3>{dataIdCard.dataId?.url}</h3>
-          <span>{dataIdCard.dataId?.created}</span>
-          <span>{dataIdCard.dataId?.edited}</span>
+          <h2>{dataIdCard.dataId?.title}</h2>
+          <h3>{dataIdCard.dataId?.brand}</h3>
+          <span>{dataIdCard.dataId?.category}</span>
+          <span>{dataIdCard.dataId?.description}</span>
+          <span>{dataIdCard.dataId?.price}$</span>
         </div>
       )}
     </div>

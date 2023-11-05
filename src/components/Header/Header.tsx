@@ -1,63 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { AppProps, AppState } from '../../types/interface';
+import React, { useState } from 'react';
+import { AppProps } from '../../types/interface';
 import styles from './Header.module.scss';
 import svg from '../../assets/search.svg';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-export default function Header({
-  dataRoot,
-  selectValue,
-  updateSelectValue,
-}: AppProps) {
-  const [state, setState] = useState<AppState>({
-    dataRoot: null,
-    isLoading: true,
-  });
+export default function Header({ dataSearch }: AppProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [inputValue, setInputValue] = useState(
-    localStorage.getItem('inputValue') || ''
+    searchParams.get('search') || localStorage.getItem('inputValue') || ''
   );
-
-  const navigate = useNavigate();
-
-  const [, setSearchParams] = useSearchParams();
-
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!location.pathname.split('/').join('')) {
-      navigate(selectValue || '');
-    }
-  }, [location.pathname, navigate, selectValue]);
-
-  useEffect(() => {
-    setState({
-      dataRoot,
-      isLoading: false,
-    });
-  }, [dataRoot]);
-
-  let valueOption: string[] | [] = [];
-
-  if (state.dataRoot) {
-    valueOption = Object.keys(state.dataRoot);
-  }
 
   const handleSearchClick = (event?: React.KeyboardEvent<HTMLInputElement>) => {
     if (!event || event?.code === 'Enter') {
-      if (selectValue) {
-        const params = new URLSearchParams();
-
-        params.set('search', inputValue);
-        localStorage.setItem('inputValue', inputValue || '');
-        setSearchParams(params);
-      }
+      const params = new URLSearchParams();
+      params.set('search', inputValue);
+      localStorage.setItem('inputValue', inputValue || '');
+      setSearchParams(params);
     }
-  };
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    updateSelectValue?.(event.target.value);
-    setInputValue('');
   };
 
   return (
@@ -65,22 +25,12 @@ export default function Header({
       <div>React. Components</div>
       <div>
         <img src={svg} alt="search" onClick={() => handleSearchClick()} />
-        <select value={selectValue} onChange={handleSelectChange}>
-          <option disabled={!!selectValue}>
-            {state.isLoading ? 'Loading...' : 'Section'}
-          </option>
-          {valueOption.map((value, index) => (
-            <option key={value + index}>{value}</option>
-          ))}
-        </select>
         <input
           list="starWars"
-          placeholder={
-            state.isLoading ? 'Loading...' : selectValue ? '' : 'Select section'
-          }
+          placeholder={dataSearch?.isLoading ? 'Loading...' : ''}
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
-          disabled={!dataRoot}
+          disabled={!!dataSearch?.isLoading}
           onKeyDown={handleSearchClick}
         />
       </div>

@@ -2,9 +2,7 @@ import { ReactChild } from 'react';
 
 export interface AppProps {
   dataRoot?: RootApi | null;
-  dataSearch?: ApiResponseState<
-    People | Film | Starship | Vehicle | Species | Planet
-  >;
+  dataSearch?: ApiResponseState;
   dataIdCard?: IdResponseState;
   urlIdCard?: string;
   selectValue?: string | undefined;
@@ -36,14 +34,14 @@ export interface RootApi {
   vehicles: string;
 }
 
-export interface ApiResponseState<T> {
+export interface ApiResponseState {
   isLoading: boolean;
-  dataResponse: ApiResponse<T> | null;
+  dataResponse: ProductList | null;
 }
 
 export interface IdResponseState {
   isLoading: boolean;
-  dataId: People | Film | Starship | Vehicle | Species | Planet | null;
+  dataId: Product | null;
 }
 
 export interface ApiResponse<T> {
@@ -162,4 +160,25 @@ export interface Planet {
   surface_water: string;
   terrain: string;
   url: string;
+}
+
+export interface Product {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand: string;
+  category: string;
+  thumbnail: string;
+  images: string[];
+}
+
+export interface ProductList {
+  products: Product[];
+  total: number;
+  skip: number;
+  limit: number;
 }

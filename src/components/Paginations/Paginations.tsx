@@ -1,51 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  ApiResponse,
-  Film,
-  People,
-  Planet,
-  Species,
-  Starship,
-  Vehicle,
-} from '../../types/interface';
+import { AppProps } from '../../types/interface';
 import styles from './Paginations.module.scss';
 
-export default function Paginations({
-  dataResponse,
-}: {
-  dataResponse?: ApiResponse<
-    People | Film | Starship | Vehicle | Species | Planet
-  >;
-}) {
-  const [linkPage, setLinkPage] = useState('');
+export default function Paginations({ dataSearch }: AppProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const limit = Number(searchParams.get('limit')) || 10;
+  const skip = Number(searchParams.get('skip')) || 0;
 
-  const [, setSearchParams] = useSearchParams();
+  const handleClickBtn = (value: string) => {
+    const params = new URLSearchParams(searchParams);
 
-  useEffect(() => {
-    if (linkPage) {
-      const url = new URL(linkPage);
-      if (url.search) {
-        setSearchParams(url.search);
-      }
+    if (value === 'prev') {
+      params.set('skip', `${Math.max(skip - limit, 0)}`);
+    } else {
+      params.set('skip', `${skip + limit}`);
     }
-  }, [linkPage, setSearchParams]);
+    const currentPage = Math.floor(Number(params.get('skip')) / limit) + 1;
 
-  const handleButtonCliCk = (value: string) => {
-    setLinkPage(value);
+    params.set('page', `${currentPage}`);
+    setSearchParams(params);
   };
 
   return (
     <div className={`paginations ${styles.paginations}`}>
-      <button
-        onClick={() => handleButtonCliCk(dataResponse?.previous || '')}
-        disabled={!dataResponse?.previous}
-      >
+      <button onClick={() => handleClickBtn('prev')} disabled={skip === 0}>
         Prev
       </button>
       <button
-        onClick={() => handleButtonCliCk(dataResponse?.next || '')}
-        disabled={!dataResponse?.next}
+        onClick={() => handleClickBtn('next')}
+        disabled={skip >= Number(dataSearch?.dataResponse?.total)}
       >
         Next
       </button>
