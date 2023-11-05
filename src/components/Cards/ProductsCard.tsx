@@ -13,7 +13,7 @@ export default function ProductsCard({ dataSearch }: AppProps) {
       navigate(`/`);
       return;
     }
-    navigate(url);
+    navigate(`/${url}`);
   };
 
   const handleCliCkClosed = () => {
