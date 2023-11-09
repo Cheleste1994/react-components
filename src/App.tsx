@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import makeRequest from './api/data-service';
 import './App.scss';
+import { Context } from './components/Context/Context';
 import ErrorComponent from './components/ErrorComponent';
 import Header from './components/Header/Header';
 import Router from './routes';
@@ -16,16 +17,13 @@ function App() {
     dataResponse: null,
   });
 
-  const location = useLocation();
-
   const [isError, setIsError] = useState<boolean>(false);
 
   const fetchDataWithSearchAndInput = useCallback(() => {
     setDataSearch({ dataResponse: null, isLoading: true });
-
     const url = new URL(baseUrl);
 
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(searchParams);
 
     if (params.get('search')) {
       url.pathname += '/search';
@@ -44,6 +42,7 @@ function App() {
       params.set('skip', `${skip > 0 ? skip : 0}`);
 
       url.search = params.toString();
+
       setSearchParams(params);
     }
 
@@ -59,7 +58,7 @@ function App() {
       .catch((error) => {
         throw new Error(`Error server: ${error}`);
       });
-  }, [location.search, searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     fetchDataWithSearchAndInput();
@@ -71,15 +70,17 @@ function App() {
 
   return (
     <>
-      <Header dataSearch={dataSearch} />
-      <Router dataSearch={dataSearch} />
-      <div className="btn__error">
-        <button onClick={simulateError}>
-          Simulate <br /> Error
-        </button>
+      <Context.Provider value={{ dataSearch }}>
+        <Header />
+        <Router />
+        <div className="btn__error">
+          <button onClick={simulateError}>
+            Simulate <br /> Error
+          </button>
 
-        {isError ? <ErrorComponent /> : ''}
-      </div>
+          {isError ? <ErrorComponent /> : ''}
+        </div>
+      </Context.Provider>
     </>
   );
 }

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { AppProps } from '../../types/interface';
+import { Context } from '../Context/Context';
 import styles from './Paginations.module.scss';
 
-export default function Paginations({ dataSearch }: AppProps) {
+export default function Paginations() {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const { dataSearch } = useContext(Context);
+
   const limit = Number(searchParams.get('limit')) || 10;
   const skip = Number(searchParams.get('skip')) || 0;
 
@@ -27,6 +30,7 @@ export default function Paginations({ dataSearch }: AppProps) {
       <button onClick={() => handleClickBtn('prev')} disabled={skip === 0}>
         Prev
       </button>
+      <span>{searchParams.get('page')}</span>
       <button
         onClick={() => handleClickBtn('next')}
         disabled={skip >= Number(dataSearch?.dataResponse?.total)}

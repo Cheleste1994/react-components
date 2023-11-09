@@ -1,10 +1,13 @@
-import React from 'react';
-import { AppProps, ProductList } from '../../types/interface';
+import React, { useContext } from 'react';
 import LogoLoad from '../LogoLoad/LogoLoad';
 import styles from '../../routes/HomePage/Home.module.scss';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { ProductList } from '../../types/interface';
+import { Context } from '../Context/Context';
 
-export default function ProductsCard({ dataSearch }: AppProps) {
+export default function ProductsCard() {
+  const { dataSearch } = useContext(Context);
+
   const navigate = useNavigate();
   const { id } = useParams();
 

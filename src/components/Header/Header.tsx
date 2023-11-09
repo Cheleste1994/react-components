@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { AppProps } from '../../types/interface';
+import React, { useContext, useState } from 'react';
 import styles from './Header.module.scss';
 import svg from '../../assets/search.svg';
 import { useSearchParams } from 'react-router-dom';
+import { Context } from '../Context/Context';
 
-export default function Header({ dataSearch }: AppProps) {
+export default function Header() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [inputValue, setInputValue] = useState(
     searchParams.get('search') || localStorage.getItem('inputValue') || ''
   );
+
+  const { dataSearch } = useContext(Context);
 
   const handleSearchClick = (event?: React.KeyboardEvent<HTMLInputElement>) => {
     if (!event || event?.code === 'Enter') {

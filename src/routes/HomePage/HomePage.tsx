@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductsCard from '../../components/Cards/ProductsCard';
+import { Context } from '../../components/Context/Context';
 import Paginations from '../../components/Paginations/Paginations';
-import { AppProps } from '../../types/interface';
 import styles from './Home.module.scss';
 
-export default function HomePage({ dataSearch }: AppProps) {
+export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectValue, setSelectValue] = useState('');
+
+  const { dataSearch } = useContext(Context);
+
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSearchParams(`limit=${event.target.value}&page=1`);
     setSelectValue(event.target.value);
@@ -35,14 +38,14 @@ export default function HomePage({ dataSearch }: AppProps) {
             </div>
           )}
           <div className={`${styles.cards} cards`}>
-            <ProductsCard dataSearch={dataSearch} />
+            <ProductsCard />
           </div>
           {!dataSearch?.dataResponse ||
           dataSearch.dataResponse?.total <=
             dataSearch?.dataResponse?.products?.length ? (
             ''
           ) : (
-            <Paginations dataSearch={dataSearch} />
+            <Paginations />
           )}
         </>
       </main>
