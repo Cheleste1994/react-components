@@ -12,6 +12,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = useState('');
   const [dataSearch, setDataSearch] = useState<ApiResponseState>({
     isLoading: false,
     dataResponse: null,
@@ -24,8 +25,9 @@ function App() {
     const url = new URL(baseUrl);
 
     const params = new URLSearchParams(searchParams);
-
-    if (params.get('search')) {
+    const searchValue = params.get('search');
+    if (searchValue) {
+      setSearchValue(searchValue);
       url.pathname += '/search';
       url.search += `q=${params.get('search')}`;
     } else {
@@ -70,7 +72,7 @@ function App() {
 
   return (
     <>
-      <Context.Provider value={{ dataSearch }}>
+      <Context.Provider value={{ dataSearch, searchValue }}>
         <Header />
         <Router />
         <div className="btn__error">

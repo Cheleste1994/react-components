@@ -2,6 +2,7 @@ import { ReactChild } from 'react';
 
 export interface AppProps {
   dataSearch?: ApiResponseState;
+  searchValue?: string;
 }
 
 export interface ErrorBoundaryProps {
