@@ -5,7 +5,7 @@ import { IdResponseState, Product } from '../../../types/interface';
 import LogoLoad from '../../LogoLoad/LogoLoad';
 import styles from './idCard.module.scss';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = 'https://dummyjson.com/products';
 
 export default function IdCard() {
   const { pathname } = useLocation();

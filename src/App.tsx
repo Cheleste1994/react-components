@@ -8,7 +8,7 @@ import Header from './components/Header/Header';
 import Router from './routes';
 import { ApiResponseState, ProductList } from './types/interface';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = 'https://dummyjson.com/products';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
