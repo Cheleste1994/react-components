@@ -33,6 +33,7 @@ export default function ProductsCard() {
               key={`${new Date().getTime()}${index}${Math.random()}`}
               className={dataSearch?.isLoading ? styles.loading : ''}
               onClick={() => handleCLick(`${el.id}`)}
+              data-testid="card-product"
             >
               <h3>{el.title}</h3>
               <h4>{el.brand}</h4>

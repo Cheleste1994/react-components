@@ -38,7 +38,7 @@ export default function IdCard() {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-testid="card-details">
       {dataIdCard?.isLoading ? (
         <LogoLoad />
       ) : (
