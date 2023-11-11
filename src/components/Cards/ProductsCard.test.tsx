@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { ApiResponseState } from '../../types/interface';
 import { Context } from '../Context/Context';
 import ProductsCard from './ProductsCard';
@@ -66,7 +66,7 @@ describe('Products', () => {
     expect(logoLoadComponent).toBeInTheDocument();
   });
 
-  it('clicking on a card opens a detailed card component', () => {
+  it('navigates to detailed card component on card click', () => {
     const mockNavigate = jest.fn();
 
     jest.mock('react-router-dom', () => ({
@@ -86,10 +86,40 @@ describe('Products', () => {
 
     cardProducts.forEach(async (product, index) => {
       await userEvent.click(product);
-
-      expect(mockNavigate).toHaveBeenCalledWith(
-        `/${dataSearch.dataResponse?.products[index].id}`
-      );
+      await waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith(
+          `/${dataSearch.dataResponse?.products[index].id}`
+        );
+      });
     });
+  });
+
+  it('opens detailed card component on card click and renders the correct outlet', async () => {
+    const mockNavigate = jest.fn();
+
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useNavigate: () => mockNavigate,
+    }));
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Context.Provider value={{ dataSearch }}>
+          <Routes>
+            <Route path={'/'} element={<ProductsCard />} />
+            <Route
+              path={'/:id'}
+              element={<div data-testid="test-outlet">Test Outlet</div>}
+            />
+          </Routes>
+        </Context.Provider>
+      </MemoryRouter>
+    );
+
+    const cardProducts = screen.getAllByTestId('card-product');
+
+    await userEvent.click(cardProducts[0]);
+
+    expect(screen.getByTestId('test-outlet')).toBeInTheDocument();
   });
 });
