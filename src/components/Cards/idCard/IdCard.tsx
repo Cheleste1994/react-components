@@ -38,12 +38,16 @@ export default function IdCard() {
   };
 
   return (
-    <div className={styles.card} data-testid="card-details">
+    <div className={styles.card}>
       {dataIdCard?.isLoading ? (
         <LogoLoad />
       ) : (
-        <div>
-          <span className={styles.prev} onClick={handleClickPrev}>
+        <div data-testid="card-details">
+          <span
+            className={styles.prev}
+            onClick={handleClickPrev}
+            data-testid="closed-details"
+          >
             ←
           </span>
           <h2>{dataIdCard.dataId?.title}</h2>

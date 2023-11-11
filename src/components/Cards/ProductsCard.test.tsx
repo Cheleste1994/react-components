@@ -29,7 +29,7 @@ const dataSearch: ApiResponseState = {
   },
 };
 describe('Products', () => {
-  it('renders the specified number of cards and displays appropriate message if no cards are present', () => {
+  it('renders the specified number of cards', () => {
     render(
       <MemoryRouter>
         <Context.Provider value={{ dataSearch }}>
@@ -38,8 +38,17 @@ describe('Products', () => {
       </MemoryRouter>
     );
 
-    const logoLoadComponent = screen.queryByTestId('logo-load');
-    expect(logoLoadComponent).toBeNull();
+    expect(screen.getAllByTestId('card-product').length).toBe(2);
+  });
+
+  it('card component renders the relevant card data', () => {
+    render(
+      <MemoryRouter>
+        <Context.Provider value={{ dataSearch }}>
+          <ProductsCard />
+        </Context.Provider>
+      </MemoryRouter>
+    );
 
     dataSearch.dataResponse?.products.forEach((product) => {
       const titleElement = screen.getByText(product.title);
@@ -47,7 +56,7 @@ describe('Products', () => {
     });
   });
 
-  it('renders LogoLoad when products array is empty', () => {
+  it('appropriate message is displayed if no cards are present', () => {
     const dataSearch: ApiResponseState = {
       isLoading: true,
       dataResponse: null,
@@ -66,7 +75,7 @@ describe('Products', () => {
     expect(logoLoadComponent).toBeInTheDocument();
   });
 
-  it('navigates to detailed card component on card click', () => {
+  it('clicking on a card opens a detailed card component', () => {
     const mockNavigate = jest.fn();
 
     jest.mock('react-router-dom', () => ({
