@@ -17,7 +17,7 @@ export default function HomePage() {
   };
   return (
     <>
-      <main className={styles.main}>
+      <main className={styles.main} data-testid="page-home">
         <>
           {!dataSearch?.dataResponse ? (
             ''

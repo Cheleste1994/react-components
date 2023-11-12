@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LogoLoad from '../components/LogoLoad/LogoLoad';
-import PageError from './404';
+import PageError from './404/PageError';
 
 const Home = lazy(() => import('./HomePage/HomePage'));
 const IdCard = lazy(() => import('../components/Cards/idCard/IdCard'));
