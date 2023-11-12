@@ -26,7 +26,12 @@ export default function Header() {
     <header className={styles.header}>
       <div>React. Components</div>
       <div>
-        <img src={svg} alt="search" onClick={() => handleSearchClick()} />
+        <img
+          src={svg}
+          alt="search"
+          onClick={() => handleSearchClick()}
+          data-testid="btn-search"
+        />
         <input
           list="starWars"
           placeholder={dataSearch?.isLoading ? 'Loading...' : ''}
@@ -34,6 +39,7 @@ export default function Header() {
           onChange={(event) => setInputValue(event.target.value)}
           disabled={!!dataSearch?.isLoading}
           onKeyDown={handleSearchClick}
+          data-testid="input-search"
         />
       </div>
     </header>
