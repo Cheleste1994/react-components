@@ -10,7 +10,7 @@ const dataSearch: ApiResponseState = {
   isLoading: false,
   dataResponse: {
     total: 100,
-    skip: 0,
+    skip: 1,
     limit: 1,
     products: [
       {
@@ -40,4 +40,19 @@ test('Paginations updates URL query parameter when page changes', () => {
   fireEvent.click(screen.getByTestId('next-page'));
 
   expect(screen.getByTestId('page-display').innerHTML).toBe('2');
+});
+
+test('Paginations updates URL query parameter when page changes', () => {
+  render(
+    <MemoryRouter initialEntries={['/?skip=1&page=2&limit=1']}>
+      <Context.Provider value={{ dataSearch }}>
+        <ProductsCard />
+        <Paginations />
+      </Context.Provider>
+    </MemoryRouter>
+  );
+
+  fireEvent.click(screen.getByTestId('prev-page'));
+
+  expect(screen.getByTestId('page-display').innerHTML).toBe('1');
 });

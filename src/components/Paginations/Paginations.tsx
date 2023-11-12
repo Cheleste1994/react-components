@@ -27,7 +27,11 @@ export default function Paginations() {
 
   return (
     <div className={`paginations ${styles.paginations}`}>
-      <button onClick={() => handleClickBtn('prev')} disabled={skip === 0}>
+      <button
+        onClick={() => handleClickBtn('prev')}
+        disabled={skip === 0}
+        data-testid="prev-page"
+      >
         Prev
       </button>
       <span data-testid="page-display">{searchParams.get('page')}</span>
