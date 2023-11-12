@@ -4,7 +4,7 @@ import svg from '../../assets/search.svg';
 import { useSearchParams } from 'react-router-dom';
 import { Context } from '../Context/Context';
 
-export default function Header() {
+export default function Header(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [inputValue, setInputValue] = useState(
@@ -13,7 +13,9 @@ export default function Header() {
 
   const { dataSearch } = useContext(Context);
 
-  const handleSearchClick = (event?: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSearchClick = (
+    event?: React.KeyboardEvent<HTMLInputElement>
+  ): void => {
     if (!event || event?.code === 'Enter') {
       const params = new URLSearchParams();
       params.set('search', inputValue);

@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Context } from '../Context/Context';
 import styles from './Paginations.module.scss';
 
-export default function Paginations() {
+export default function Paginations(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { dataSearch } = useContext(Context);
@@ -11,7 +11,7 @@ export default function Paginations() {
   const limit = Number(searchParams.get('limit')) || 10;
   const skip = Number(searchParams.get('skip')) || 0;
 
-  const handleClickBtn = (value: string) => {
+  const handleClickBtn = (value: string): void => {
     const params = new URLSearchParams(searchParams);
 
     if (value === 'prev') {

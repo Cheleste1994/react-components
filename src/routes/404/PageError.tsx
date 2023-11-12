@@ -1,8 +1,8 @@
 import React from 'react';
 import LogoLoad from '../../components/LogoLoad/LogoLoad';
-import mainStyles from '../routes/HomePage/Home.module.scss';
+import mainStyles from '../HomePage/Home.module.scss';
 
-export default function PageError() {
+export default function PageError(): JSX.Element {
   return (
     <>
       <main className={mainStyles.main} data-testid="page-404">

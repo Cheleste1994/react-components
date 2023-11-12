@@ -5,7 +5,7 @@ module.exports = {
     '^.+\\.(js|jsx)$': 'babel-jest',
   },
   moduleNameMapper: {
-    '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/test/__mocks__/fileMock.js',
+    '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/test/__mocks__/fileMock.ts',
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '@/(.*)$': '<rootDir>/src/$1',
     '@/Assets/(.*)$': '<rootDir>/src/assets/$1',

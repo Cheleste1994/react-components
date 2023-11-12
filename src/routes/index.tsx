@@ -1,12 +1,12 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import IdCard from '../components/Cards/idCard/IdCard';
 import LogoLoad from '../components/LogoLoad/LogoLoad';
 import PageError from './404/PageError';
 
 const Home = lazy(() => import('./HomePage/HomePage'));
-const IdCard = lazy(() => import('../components/Cards/idCard/IdCard'));
 
-const Router = () => (
+const Router = (): React.JSX.Element => (
   <Routes>
     <Route
       path=""
@@ -15,9 +15,10 @@ const Router = () => (
           <Home />
         </Suspense>
       }
-    />
+    >
+      <Route path=":id" element={<IdCard />} />
+    </Route>
     <Route path="*" element={<PageError />} />
-    <Route path=":id" element={<IdCard />} />
   </Routes>
 );
 

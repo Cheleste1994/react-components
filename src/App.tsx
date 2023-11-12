@@ -10,7 +10,7 @@ import { ApiResponseState, ProductList } from './types/interface';
 
 const baseUrl = 'https://dummyjson.com/products';
 
-function App() {
+function App(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState('');
   const [dataSearch, setDataSearch] = useState<ApiResponseState>({
@@ -20,7 +20,7 @@ function App() {
 
   const [isError, setIsError] = useState<boolean>(false);
 
-  const fetchDataWithSearchAndInput = useCallback(() => {
+  const fetchDataWithSearchAndInput = useCallback((): void => {
     setDataSearch({ dataResponse: null, isLoading: true });
     const url = new URL(baseUrl);
 
@@ -49,7 +49,7 @@ function App() {
     }
 
     makeRequest('GET', url.href)
-      .then(({ data }) => {
+      .then(({ data }): void => {
         if (data) {
           setDataSearch({
             dataResponse: data as ProductList,
@@ -57,16 +57,16 @@ function App() {
           });
         }
       })
-      .catch((error) => {
+      .catch((error): void => {
         throw new Error(`Error server: ${error}`);
       });
   }, [searchParams, setSearchParams]);
 
-  useEffect(() => {
+  useEffect((): void => {
     fetchDataWithSearchAndInput();
   }, [fetchDataWithSearchAndInput]);
 
-  const simulateError = () => {
+  const simulateError = (): void => {
     setIsError(true);
   };
 
@@ -75,14 +75,14 @@ function App() {
       <Context.Provider value={{ dataSearch, searchValue }}>
         <Header />
         <Router />
-        <div className="btn__error">
-          <button onClick={simulateError}>
-            Simulate <br /> Error
-          </button>
-
-          {isError ? <ErrorComponent /> : ''}
-        </div>
       </Context.Provider>
+      <div className="btn__error">
+        <button onClick={simulateError}>
+          Simulate <br /> Error
+        </button>
+
+        {isError ? <ErrorComponent /> : ''}
+      </div>
     </>
   );
 }

@@ -1,24 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import makeRequest from '../../../api/data-service';
 import { IdResponseState, Product } from '../../../types/interface';
 import LogoLoad from '../../LogoLoad/LogoLoad';
 import styles from './idCard.module.scss';
 
-const baseUrl = 'https://dummyjson.com/products';
+const baseUrl = 'https://dummyjson.com/products/';
 
-export default function IdCard() {
-  const { pathname } = useLocation();
+export default function IdCard(): JSX.Element {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [dataIdCard, setDataIdCard] = useState<IdResponseState>({
     isLoading: false,
     dataId: null,
   });
 
-  const fetchDataWithId = useCallback(() => {
+  const fetchDataWithId = useCallback((): void => {
     if (!dataIdCard.dataId) {
       setDataIdCard({ dataId: null, isLoading: true });
-      makeRequest('GET', baseUrl + pathname).then(({ data }) => {
+      makeRequest('GET', baseUrl + id).then(({ data }) => {
         if (data) {
           setDataIdCard({
             dataId: data as Product,
@@ -27,13 +27,13 @@ export default function IdCard() {
         }
       });
     }
-  }, [dataIdCard.dataId, pathname]);
+  }, [dataIdCard.dataId, id]);
 
-  useEffect(() => {
+  useEffect((): void => {
     fetchDataWithId();
   }, [fetchDataWithId]);
 
-  const handleClickPrev = () => {
+  const handleClickPrev = (): void => {
     navigate(`/`);
   };
 

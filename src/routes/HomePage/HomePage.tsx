@@ -5,13 +5,15 @@ import { Context } from '../../components/Context/Context';
 import Paginations from '../../components/Paginations/Paginations';
 import styles from './Home.module.scss';
 
-export default function HomePage() {
+export default function HomePage(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectValue, setSelectValue] = useState('');
 
   const { dataSearch } = useContext(Context);
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ): void => {
     setSearchParams(`limit=${event.target.value}&page=1`);
     setSelectValue(event.target.value);
   };
@@ -27,6 +29,7 @@ export default function HomePage() {
                 name="products"
                 onChange={handleSelectChange}
                 value={selectValue}
+                data-testid="limit-products"
               >
                 <option value="" disabled>
                   {searchParams.get('limit')}

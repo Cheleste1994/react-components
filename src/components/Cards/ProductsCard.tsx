@@ -5,13 +5,13 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { ProductList } from '../../types/interface';
 import { Context } from '../Context/Context';
 
-export default function ProductsCard() {
+export default function ProductsCard(): JSX.Element {
   const { dataSearch } = useContext(Context);
 
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const handleCLick = (url: string) => {
+  const handleCLick = (url: string): void => {
     if (id) {
       navigate(`/`);
       return;
@@ -19,7 +19,7 @@ export default function ProductsCard() {
     navigate(`/${url}`);
   };
 
-  const handleCliCkClosed = () => {
+  const handleCliCkClosed = (): void => {
     if (id) {
       navigate('/');
     }
