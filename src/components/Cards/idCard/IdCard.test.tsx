@@ -22,95 +22,97 @@ beforeEach(() => {
   }));
 });
 
-it('triggers an additional API call to fetch detailed information', async () => {
-  jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useLocation: { pathname: '/1' },
-  }));
+describe('Products details', () => {
+  it('triggers an additional API call to fetch detailed information', async () => {
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useLocation: { pathname: '/1' },
+    }));
 
-  render(
-    <MemoryRouter initialEntries={['/']}>
-      <IdCard />
-    </MemoryRouter>
-  );
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <IdCard />
+      </MemoryRouter>
+    );
 
-  await waitFor(() =>
-    expect(screen.getByTestId('card-details')).toBeInTheDocument()
-  );
-});
-
-it('clicking the close button hides the component', async () => {
-  jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useLocation: { pathname: '/1' },
-  }));
-
-  render(
-    <MemoryRouter initialEntries={['/1']}>
-      <Routes>
-        <Route
-          path={'/'}
-          element={<div data-testid="test-closed">Test closed</div>}
-        />
-        <Route path={'/:id'} element={<IdCard />} />
-      </Routes>
-    </MemoryRouter>
-  );
-
-  await waitFor(() =>
-    expect(screen.getByTestId('card-details')).toBeInTheDocument()
-  );
-
-  await waitFor(() => {
-    fireEvent.click(screen.getByTestId('closed-details'));
+    await waitFor(() =>
+      expect(screen.getByTestId('card-details')).toBeInTheDocument()
+    );
   });
 
-  expect(screen.getByTestId('test-closed')).toBeInTheDocument();
-});
+  it('clicking the close button hides the component', async () => {
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useLocation: { pathname: '/1' },
+    }));
 
-it('Make sure the detailed card component correctly displays the detailed card data', async () => {
-  jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useLocation: { pathname: '/1' },
-  }));
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <Routes>
+          <Route
+            path={'/'}
+            element={<div data-testid="test-closed">Test closed</div>}
+          />
+          <Route path={'/:id'} element={<IdCard />} />
+        </Routes>
+      </MemoryRouter>
+    );
 
-  render(
-    <MemoryRouter initialEntries={['/']}>
-      <IdCard />
-    </MemoryRouter>
-  );
+    await waitFor(() =>
+      expect(screen.getByTestId('card-details')).toBeInTheDocument()
+    );
 
-  await waitFor(() => {
-    expect(screen.getByText(mockData.title)).toBeInTheDocument();
-    expect(screen.getByText(mockData.brand)).toBeInTheDocument();
-    expect(screen.getByText(mockData.category)).toBeInTheDocument();
-    expect(screen.getByText(mockData.description)).toBeInTheDocument();
-    expect(screen.getByText(`${mockData.price}$`)).toBeInTheDocument();
-  });
-});
+    await waitFor(() => {
+      fireEvent.click(screen.getByTestId('closed-details'));
+    });
 
-it('Check that a loading indicator is displayed while fetching data', async () => {
-  jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useLocation: { pathname: '' },
-  }));
-
-  render(
-    <MemoryRouter initialEntries={['/']}>
-      <IdCard />
-    </MemoryRouter>
-  );
-
-  await waitFor(() => {
-    expect(screen.getByTestId('logo-load')).toBeInTheDocument();
+    expect(screen.getByTestId('test-closed')).toBeInTheDocument();
   });
 
-  jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useLocation: { pathname: '/1' },
-  }));
+  it('Make sure the detailed card component correctly displays the detailed card data', async () => {
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useLocation: { pathname: '/1' },
+    }));
 
-  await waitFor(() =>
-    expect(screen.getByTestId('card-details')).toBeInTheDocument()
-  );
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <IdCard />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(mockData.title)).toBeInTheDocument();
+      expect(screen.getByText(mockData.brand)).toBeInTheDocument();
+      expect(screen.getByText(mockData.category)).toBeInTheDocument();
+      expect(screen.getByText(mockData.description)).toBeInTheDocument();
+      expect(screen.getByText(`${mockData.price}$`)).toBeInTheDocument();
+    });
+  });
+
+  it('Check that a loading indicator is displayed while fetching data', async () => {
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useLocation: { pathname: '' },
+    }));
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <IdCard />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('logo-load')).toBeInTheDocument();
+    });
+
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useLocation: { pathname: '/1' },
+    }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId('card-details')).toBeInTheDocument()
+    );
+  });
 });

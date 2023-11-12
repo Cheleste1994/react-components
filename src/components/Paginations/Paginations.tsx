@@ -30,10 +30,11 @@ export default function Paginations() {
       <button onClick={() => handleClickBtn('prev')} disabled={skip === 0}>
         Prev
       </button>
-      <span>{searchParams.get('page')}</span>
+      <span data-testid="page-display">{searchParams.get('page')}</span>
       <button
         onClick={() => handleClickBtn('next')}
         disabled={skip >= Number(dataSearch?.dataResponse?.total)}
+        data-testid="next-page"
       >
         Next
       </button>
