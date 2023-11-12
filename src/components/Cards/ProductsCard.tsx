@@ -26,7 +26,7 @@ export default function ProductsCard() {
   };
   return (
     <>
-      <div onClick={handleCliCkClosed}>
+      <div onClick={handleCliCkClosed} data-testid="products-list">
         {(dataSearch?.dataResponse as ProductList)?.products?.map(
           (el, index) => (
             <div

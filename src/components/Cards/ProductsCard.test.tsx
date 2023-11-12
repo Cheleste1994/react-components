@@ -131,4 +131,58 @@ describe('Products', () => {
 
     expect(screen.getByTestId('test-outlet')).toBeInTheDocument();
   });
+
+  it('should close if open details ', async () => {
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <Context.Provider value={{ dataSearch }}>
+          <Routes>
+            <Route path="" element={<ProductsCard />} />
+            <Route
+              path=":id"
+              element={
+                <>
+                  <ProductsCard />
+                  <div data-testid="test-outlet">Test Outlet</div>
+                </>
+              }
+            />
+          </Routes>
+        </Context.Provider>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByTestId('test-outlet')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId('products-list'));
+
+    expect(screen.queryByTestId('test-outlet')).not.toBeInTheDocument();
+  });
+
+  it('should close details if click card', async () => {
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <Context.Provider value={{ dataSearch }}>
+          <Routes>
+            <Route path="" element={<ProductsCard />} />
+            <Route
+              path=":id"
+              element={
+                <>
+                  <ProductsCard />
+                  <div data-testid="test-outlet">Test Outlet</div>
+                </>
+              }
+            />
+          </Routes>
+        </Context.Provider>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByTestId('test-outlet')).toBeInTheDocument();
+
+    await userEvent.click(screen.getAllByTestId('card-product')[0]);
+
+    expect(screen.queryByTestId('test-outlet')).not.toBeInTheDocument();
+  });
 });

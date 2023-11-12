@@ -1,14 +1,12 @@
 async function makeRequest<T>(
   method: string,
-  url: string,
-  body?: undefined
+  url: string
 ): Promise<{ data: T; header: string | null }> {
   const response = await fetch(`${url}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
     },
-    body: body !== undefined ? JSON.stringify(body) : null,
   });
   if (response.ok) {
     const data = await response.json();

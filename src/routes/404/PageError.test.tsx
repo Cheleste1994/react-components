@@ -26,7 +26,6 @@ describe('404 page', () => {
 
     renderComponent('/test/page/404');
 
-    screen.debug();
     expect(screen.queryByTestId('page-404')).toBeInTheDocument();
     expect(screen.queryByTestId('page-home')).not.toBeInTheDocument();
   });

@@ -1,4 +1,4 @@
 import { createContext } from 'react';
 import { AppProps } from '../../types/interface';
 
-export const Context = createContext<AppProps>({ searchValue: '123' });
+export const Context = createContext<AppProps>({ searchValue: '' });
