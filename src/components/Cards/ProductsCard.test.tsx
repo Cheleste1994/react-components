@@ -31,7 +31,21 @@ const dataSearch: ApiResponseState = {
   },
 };
 describe('Products', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('renders the specified number of cards', () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({
+        dataSearch: dataSearch,
+      });
+
     render(
       <MemoryRouter>
         <Context.Provider value={{ dataSearch }}>
@@ -44,6 +58,16 @@ describe('Products', () => {
   });
 
   it('card component renders the relevant card data', () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({
+        dataSearch: dataSearch,
+      });
+
     render(
       <MemoryRouter>
         <Context.Provider value={{ dataSearch }}>
@@ -59,10 +83,18 @@ describe('Products', () => {
   });
 
   it('appropriate message is displayed if no cards are present', () => {
-    const dataSearch: ApiResponseState = {
-      isLoading: true,
-      dataResponse: null,
-    };
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({
+        dataSearch: {
+          isLoading: true,
+          dataResponse: null,
+        },
+      });
 
     render(
       <MemoryRouter>
@@ -78,6 +110,16 @@ describe('Products', () => {
   });
 
   it('clicking on a card opens a detailed card component', () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({
+        dataSearch: dataSearch,
+      });
+
     const mockNavigate = jest.fn();
 
     jest.mock('react-router-dom', () => ({
@@ -106,6 +148,16 @@ describe('Products', () => {
   });
 
   it('opens detailed card component on card click and renders the correct outlet', async () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({
+        dataSearch: dataSearch,
+      });
+
     const mockNavigate = jest.fn();
 
     jest.mock('react-router-dom', () => ({
@@ -135,6 +187,16 @@ describe('Products', () => {
   });
 
   it('should close if open details ', async () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({
+        dataSearch: dataSearch,
+      });
+
     render(
       <MemoryRouter initialEntries={['/1']}>
         <Context.Provider value={{ dataSearch }}>
@@ -162,6 +224,16 @@ describe('Products', () => {
   });
 
   it('should close details if click card', async () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({
+        dataSearch: dataSearch,
+      });
+
     render(
       <MemoryRouter initialEntries={['/1']}>
         <Context.Provider value={{ dataSearch }}>

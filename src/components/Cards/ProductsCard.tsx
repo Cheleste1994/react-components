@@ -1,19 +1,23 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import LogoLoad from '../LogoLoad/LogoLoad';
 import styles from '../../routes/HomePage/Home.module.scss';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { ProductList } from '../../types/interface';
-import { Context } from '../Context/Context';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks/hooks';
+import { clearProductId } from '../../redux/slice/productID.slice';
 
 export default function ProductsCard(): JSX.Element {
-  const { dataSearch } = useContext(Context);
+  const { dataSearch } = useAppSelector((state) => state.productSlice);
 
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const dispatch = useAppDispatch();
+
   const handleCLick = (url: string): void => {
     if (id) {
       navigate(`/`);
+      dispatch(clearProductId());
       return;
     }
     navigate(`/${url}`);
@@ -22,6 +26,7 @@ export default function ProductsCard(): JSX.Element {
   const handleCliCkClosed = (): void => {
     if (id) {
       navigate('/');
+      dispatch(clearProductId());
     }
   };
   return (

@@ -1,12 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Context } from '../Context/Context';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks/hooks';
+import { setPage } from '../../redux/slice/products.slice';
 import styles from './Paginations.module.scss';
 
 export default function Paginations(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { dataSearch } = useContext(Context);
+  const { dataSearch, page: pageNumber } = useAppSelector(
+    (state) => state.productSlice
+  );
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setPage(Number(searchParams.get('page'))));
+  }, [dispatch, searchParams]);
 
   const limit = Number(searchParams.get('limit')) || 10;
   const skip = Number(searchParams.get('skip')) || 0;
@@ -22,6 +31,7 @@ export default function Paginations(): JSX.Element {
     const currentPage = Math.floor(Number(params.get('skip')) / limit) + 1;
 
     params.set('page', `${currentPage}`);
+    params.set('limit', `${limit}`);
     setSearchParams(params);
   };
 
@@ -34,7 +44,7 @@ export default function Paginations(): JSX.Element {
       >
         Prev
       </button>
-      <span data-testid="page-display">{searchParams.get('page')}</span>
+      <span data-testid="page-display">{pageNumber}</span>
       <button
         onClick={() => handleClickBtn('next')}
         disabled={skip >= Number(dataSearch?.dataResponse?.total)}

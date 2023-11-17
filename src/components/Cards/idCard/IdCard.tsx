@@ -1,45 +1,41 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import makeRequest from '../../../api/data-service';
-import { IdResponseState, Product } from '../../../types/interface';
+import { useGetProductIDQuery } from '../../../redux/api/productsApi';
+import { useAppDispatch } from '../../../redux/hooks/hooks';
+import {
+  clearProductId,
+  setProductId,
+} from '../../../redux/slice/productID.slice';
 import LogoLoad from '../../LogoLoad/LogoLoad';
 import styles from './idCard.module.scss';
-
-const baseUrl = 'https://dummyjson.com/products/';
 
 export default function IdCard(): JSX.Element {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [dataIdCard, setDataIdCard] = useState<IdResponseState>({
-    isLoading: false,
-    dataId: null,
+
+  const {
+    data: dataId,
+    isLoading,
+    isError,
+  } = useGetProductIDQuery(id as string, {
+    skip: !id,
   });
 
-  const fetchDataWithId = useCallback((): void => {
-    if (!dataIdCard.dataId) {
-      setDataIdCard({ dataId: null, isLoading: true });
-      makeRequest('GET', baseUrl + id).then(({ data }) => {
-        if (data) {
-          setDataIdCard({
-            dataId: data as Product,
-            isLoading: false,
-          });
-        }
-      });
-    }
-  }, [dataIdCard.dataId, id]);
+  const dispatch = useAppDispatch();
 
-  useEffect((): void => {
-    fetchDataWithId();
-  }, [fetchDataWithId]);
+  useEffect(() => {
+    dispatch(setProductId({ dataId, isLoading }));
+  }, [dataId, dispatch, isLoading]);
 
   const handleClickPrev = (): void => {
     navigate(`/`);
+    dispatch(clearProductId());
   };
 
   return (
     <div className={styles.card}>
-      {dataIdCard?.isLoading ? (
+      {isError && <div>Not found!</div>}
+      {isLoading ? (
         <LogoLoad />
       ) : (
         <div data-testid="card-details">
@@ -50,11 +46,11 @@ export default function IdCard(): JSX.Element {
           >
             ←
           </span>
-          <h2>{dataIdCard.dataId?.title}</h2>
-          <h3>{dataIdCard.dataId?.brand}</h3>
-          <span>{dataIdCard.dataId?.category}</span>
-          <span>{dataIdCard.dataId?.description}</span>
-          <span>{dataIdCard.dataId?.price}$</span>
+          <h2>{dataId?.title}</h2>
+          <h3>{dataId?.brand}</h3>
+          <span>{dataId?.category}</span>
+          <span>{dataId?.description}</span>
+          <span>{dataId?.price}$</span>
         </div>
       )}
     </div>

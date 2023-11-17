@@ -1,17 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './Header.module.scss';
 import svg from '../../assets/search.svg';
 import { useSearchParams } from 'react-router-dom';
-import { Context } from '../Context/Context';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks/hooks';
+import { setSearchValue } from '../../redux/slice/products.slice';
 
 export default function Header(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const { searchValue, dataSearch } = useAppSelector(
+    (state) => state.productSlice
+  );
   const [inputValue, setInputValue] = useState(
-    searchParams.get('search') || localStorage.getItem('inputValue') || ''
+    searchParams.get('search') || searchValue
   );
 
-  const { dataSearch } = useContext(Context);
+  const dispatch = useAppDispatch();
 
   const handleSearchClick = (
     event?: React.KeyboardEvent<HTMLInputElement>
@@ -21,6 +24,7 @@ export default function Header(): JSX.Element {
       params.set('search', inputValue);
       localStorage.setItem('inputValue', inputValue || '');
       setSearchParams(params);
+      dispatch(setSearchValue({ inputValue }));
     }
   };
 

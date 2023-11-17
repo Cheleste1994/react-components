@@ -1,27 +1,39 @@
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useGetProductsQuery } from '../../redux/api/productsApi';
 import ProductsCard from '../../components/Cards/ProductsCard';
-import { Context } from '../../components/Context/Context';
 import Paginations from '../../components/Paginations/Paginations';
+import { useAppDispatch } from '../../redux/hooks/hooks';
+import { setDataSearch } from '../../redux/slice/products.slice';
 import styles from './Home.module.scss';
 
 export default function HomePage(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectValue, setSelectValue] = useState('');
 
-  const { dataSearch } = useContext(Context);
+  const { data: productList, isLoading } = useGetProductsQuery(
+    searchParams.get('search')
+      ? `search?q=${searchParams.get('search')}`
+      : `?${searchParams}`
+  );
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setDataSearch({ productList, isLoading }));
+  }, [dispatch, isLoading, productList]);
 
   const handleSelectChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
-    setSearchParams(`limit=${event.target.value}&page=1`);
+    setSearchParams(`limit=${event.target.value}&page=1&skip=0`);
     setSelectValue(event.target.value);
   };
   return (
     <>
       <main className={styles.main} data-testid="page-home">
         <>
-          {!dataSearch?.dataResponse ? (
+          {isLoading ? (
             ''
           ) : (
             <div className={styles.count}>
@@ -43,9 +55,8 @@ export default function HomePage(): JSX.Element {
           <div className={`${styles.cards} cards`}>
             <ProductsCard />
           </div>
-          {!dataSearch?.dataResponse ||
-          dataSearch.dataResponse?.total <=
-            dataSearch?.dataResponse?.products?.length ? (
+          {!productList ||
+          productList?.total <= productList?.products?.length ? (
             ''
           ) : (
             <Paginations />

@@ -38,6 +38,18 @@ describe('Home page', () => {
       </MemoryRouter>
     );
 
+  jest
+    .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+    .mockReturnValue(() => {});
+
+  jest
+    .spyOn(require('../../redux/api/productsApi'), 'useGetProductsQuery')
+    .mockReturnValue(dataSearch);
+
+  jest
+    .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+    .mockReturnValue({ dataSearch });
+
   beforeEach(() => {
     jest.clearAllMocks();
   });

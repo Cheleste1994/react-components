@@ -13,6 +13,21 @@ describe('Header Component', () => {
 
   const inputValueTest = 'Test';
 
+  jest
+    .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+    .mockReturnValue(() => {});
+
+  jest
+    .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+    .mockReturnValue({
+      dataSearch: '',
+      searchValue: inputValueTest,
+    });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('clicking the Search button saves the entered value to the local storage', async () => {
     renderComponent();
 

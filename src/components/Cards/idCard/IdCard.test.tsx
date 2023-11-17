@@ -15,6 +15,10 @@ const mockData = {
   price: 100,
 };
 
+jest
+  .spyOn(require('../../../redux/hooks/hooks'), 'useAppDispatch')
+  .mockReturnValue(() => {});
+
 beforeEach(() => {
   jest.clearAllMocks();
   (makeRequest as jest.Mock).mockImplementation(async () => ({
@@ -28,6 +32,14 @@ describe('Products details', () => {
       ...jest.requireActual('react-router-dom'),
       useLocation: { pathname: '/1' },
     }));
+
+    jest
+      .spyOn(require('../../../redux/api/productsApi'), 'useGetProductIDQuery')
+      .mockReturnValue({
+        data: mockData,
+        isLoading: false,
+        isError: undefined,
+      });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -45,6 +57,14 @@ describe('Products details', () => {
       ...jest.requireActual('react-router-dom'),
       useLocation: { pathname: '/1' },
     }));
+
+    jest
+      .spyOn(require('../../../redux/api/productsApi'), 'useGetProductIDQuery')
+      .mockReturnValue({
+        data: mockData,
+        isLoading: false,
+        isError: undefined,
+      });
 
     render(
       <MemoryRouter initialEntries={['/1']}>
@@ -75,6 +95,14 @@ describe('Products details', () => {
       useLocation: { pathname: '/1' },
     }));
 
+    jest
+      .spyOn(require('../../../redux/api/productsApi'), 'useGetProductIDQuery')
+      .mockReturnValue({
+        data: mockData,
+        isLoading: false,
+        isError: undefined,
+      });
+
     render(
       <MemoryRouter initialEntries={['/']}>
         <IdCard />
@@ -96,6 +124,14 @@ describe('Products details', () => {
       useLocation: { pathname: '' },
     }));
 
+    jest
+      .spyOn(require('../../../redux/api/productsApi'), 'useGetProductIDQuery')
+      .mockReturnValue({
+        data: undefined,
+        isLoading: true,
+        isError: undefined,
+      });
+
     render(
       <MemoryRouter initialEntries={['/']}>
         <IdCard />
@@ -105,14 +141,5 @@ describe('Products details', () => {
     await waitFor(() => {
       expect(screen.getByTestId('logo-load')).toBeInTheDocument();
     });
-
-    jest.mock('react-router-dom', () => ({
-      ...jest.requireActual('react-router-dom'),
-      useLocation: { pathname: '/1' },
-    }));
-
-    await waitFor(() =>
-      expect(screen.getByTestId('card-details')).toBeInTheDocument()
-    );
   });
 });
