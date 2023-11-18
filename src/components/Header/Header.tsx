@@ -10,6 +10,7 @@ export default function Header(): JSX.Element {
   const { searchValue, dataSearch } = useAppSelector(
     (state) => state.productSlice
   );
+  const { isOpen } = useAppSelector((state) => state.detailSlice);
   const [inputValue, setInputValue] = useState(
     searchParams.get('search') || searchValue
   );
@@ -35,17 +36,19 @@ export default function Header(): JSX.Element {
         <img
           src={svg}
           alt="search"
-          onClick={() => handleSearchClick()}
+          onClick={() => !isOpen && handleSearchClick()}
           data-testid="btn-search"
+          style={{ opacity: `${isOpen ? '0.5' : '1'}` }}
         />
         <input
           list="starWars"
           placeholder={dataSearch?.isLoading ? 'Loading...' : ''}
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
-          disabled={!!dataSearch?.isLoading}
+          disabled={!!dataSearch?.isLoading || isOpen}
           onKeyDown={handleSearchClick}
           data-testid="input-search"
+          style={{ opacity: `${isOpen ? '0.5' : '1'}` }}
         />
       </div>
     </header>

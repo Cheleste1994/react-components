@@ -4,7 +4,7 @@ import styles from '../../routes/HomePage/Home.module.scss';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { ProductList } from '../../types/interface';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks/hooks';
-import { clearProductId } from '../../redux/slice/productID.slice';
+import { clearProductId } from '../../redux/slice/detail.slice';
 
 export default function ProductsCard(): JSX.Element {
   const { dataSearch } = useAppSelector((state) => state.productSlice);
@@ -15,9 +15,10 @@ export default function ProductsCard(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const handleCLick = (url: string): void => {
+    dispatch(clearProductId());
+
     if (id) {
       navigate(`/`);
-      dispatch(clearProductId());
       return;
     }
     navigate(`/${url}`);

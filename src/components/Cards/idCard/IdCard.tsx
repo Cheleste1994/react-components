@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetProductIDQuery } from '../../../redux/api/productsApi';
+import { useGetProductDetailQuery } from '../../../redux/api/productsApi';
 import { useAppDispatch } from '../../../redux/hooks/hooks';
 import {
   clearProductId,
   setProductId,
-} from '../../../redux/slice/productID.slice';
+} from '../../../redux/slice/detail.slice';
 import LogoLoad from '../../LogoLoad/LogoLoad';
 import styles from './idCard.module.scss';
 
@@ -17,14 +17,14 @@ export default function IdCard(): JSX.Element {
     data: dataId,
     isLoading,
     isError,
-  } = useGetProductIDQuery(id as string, {
+  } = useGetProductDetailQuery(id as string, {
     skip: !id,
   });
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setProductId({ dataId, isLoading }));
+    dispatch(setProductId({ dataId, isLoading, isOpen: true }));
   }, [dataId, dispatch, isLoading]);
 
   const handleClickPrev = (): void => {

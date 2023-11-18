@@ -34,7 +34,10 @@ describe('Products details', () => {
     }));
 
     jest
-      .spyOn(require('../../../redux/api/productsApi'), 'useGetProductIDQuery')
+      .spyOn(
+        require('../../../redux/api/productsApi'),
+        'useGetProductDetailQuery'
+      )
       .mockReturnValue({
         data: mockData,
         isLoading: false,
@@ -59,7 +62,10 @@ describe('Products details', () => {
     }));
 
     jest
-      .spyOn(require('../../../redux/api/productsApi'), 'useGetProductIDQuery')
+      .spyOn(
+        require('../../../redux/api/productsApi'),
+        'useGetProductDetailQuery'
+      )
       .mockReturnValue({
         data: mockData,
         isLoading: false,
@@ -96,7 +102,10 @@ describe('Products details', () => {
     }));
 
     jest
-      .spyOn(require('../../../redux/api/productsApi'), 'useGetProductIDQuery')
+      .spyOn(
+        require('../../../redux/api/productsApi'),
+        'useGetProductDetailQuery'
+      )
       .mockReturnValue({
         data: mockData,
         isLoading: false,
@@ -125,7 +134,10 @@ describe('Products details', () => {
     }));
 
     jest
-      .spyOn(require('../../../redux/api/productsApi'), 'useGetProductIDQuery')
+      .spyOn(
+        require('../../../redux/api/productsApi'),
+        'useGetProductDetailQuery'
+      )
       .mockReturnValue({
         data: undefined,
         isLoading: true,
