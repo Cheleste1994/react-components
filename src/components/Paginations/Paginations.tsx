@@ -36,7 +36,10 @@ export default function Paginations(): JSX.Element {
   };
 
   return (
-    <div className={`paginations ${styles.paginations}`}>
+    <div
+      className={`paginations ${styles.paginations}`}
+      data-testid="paginations"
+    >
       <button
         onClick={() => handleClickBtn('prev')}
         disabled={skip === 0}

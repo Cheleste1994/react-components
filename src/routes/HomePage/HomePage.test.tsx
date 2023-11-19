@@ -38,23 +38,23 @@ describe('Home page', () => {
       </MemoryRouter>
     );
 
-  jest
-    .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
-    .mockReturnValue(() => {});
-
-  jest
-    .spyOn(require('../../redux/api/productsApi'), 'useGetProductsQuery')
-    .mockReturnValue(dataSearch);
-
-  jest
-    .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
-    .mockReturnValue({ dataSearch });
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('should display the limit from the url', async () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/api/productsApi'), 'useGetProductsQuery')
+      .mockReturnValue(dataSearch);
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({ dataSearch });
+
     renderComponent('/?limit=20');
     expect(screen.getByTestId('limit-products')).toContainHTML('20');
     cleanup();
@@ -63,6 +63,18 @@ describe('Home page', () => {
   });
 
   it('should display the selected value', async () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/api/productsApi'), 'useGetProductsQuery')
+      .mockReturnValue(dataSearch);
+
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppSelector')
+      .mockReturnValue({ dataSearch });
+
     renderComponent('/?limit=20');
 
     const limitProducts = screen.getByTestId('limit-products');
@@ -72,5 +84,54 @@ describe('Home page', () => {
     fireEvent.change(limitProducts, '10');
 
     expect(limitProducts).toContainHTML('10');
+  });
+
+  it('should loading correct', async () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/api/productsApi'), 'useGetProductsQuery')
+      .mockReturnValue({ isLoading: true, data: undefined });
+
+    renderComponent('/?search=Test');
+
+    const limitProducts = screen.queryByTestId('limit-products');
+    const paginations = screen.queryByTestId('paginations');
+
+    expect(limitProducts).not.toBeInTheDocument();
+    expect(paginations).not.toBeInTheDocument();
+  });
+
+  it('should paginations correct', async () => {
+    jest
+      .spyOn(require('../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(() => {});
+
+    jest
+      .spyOn(require('../../redux/api/productsApi'), 'useGetProductsQuery')
+      .mockReturnValue({
+        isLoading: true,
+        data: {
+          total: 1,
+          skip: 0,
+          limit: 1,
+          products: [
+            {
+              id: 1,
+              title: 'Product 1',
+              brand: 'Brand 1',
+              category: 'Category 1',
+            },
+          ],
+        },
+      });
+
+    renderComponent('/?search=Test');
+
+    const paginations = screen.queryByTestId('paginations');
+
+    expect(paginations).not.toBeInTheDocument();
   });
 });

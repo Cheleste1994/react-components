@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import React from 'react';
 import { ReactNode } from 'react';
 import { Provider } from 'react-redux';
@@ -7,10 +7,6 @@ import {
   useGetProductsQuery,
 } from '../api/productsApi';
 import { store } from '../store';
-
-function Wrapper(props: { children: ReactNode }) {
-  return <Provider store={store}>{props.children}</Provider>;
-}
 
 const data = {};
 
@@ -24,33 +20,39 @@ beforeAll(() => {
 });
 
 describe('Api', () => {
-  it('should "useGetProductsQuery" return result correct', () => {
+  const Wrapper = ({ children }: { children?: ReactNode }) => (
+    <Provider store={store}>{children}</Provider>
+  );
+
+  it('should "useGetProductsQuery" return result correct', async () => {
     const { result } = renderHook(() => useGetProductsQuery('search?q=Test'), {
       wrapper: Wrapper,
     });
-
-    expect(result.current).toMatchObject({
-      status: 'pending',
-      endpointName: 'getProducts',
-      isLoading: true,
-      isSuccess: false,
-      isError: false,
-      isFetching: true,
+    await act(async () => {
+      expect(result.current).toMatchObject({
+        status: 'pending',
+        endpointName: 'getProducts',
+        isLoading: true,
+        isSuccess: false,
+        isError: false,
+        isFetching: true,
+      });
     });
   });
 
-  it('should "useGetProductsQuery" return result correct', () => {
+  it('should "useGetProductsQuery" return result correct', async () => {
     const { result } = renderHook(() => useGetProductDetailQuery('1'), {
       wrapper: Wrapper,
     });
-
-    expect(result.current).toMatchObject({
-      status: 'pending',
-      endpointName: 'getProductDetail',
-      isLoading: true,
-      isSuccess: false,
-      isError: false,
-      isFetching: true,
+    await act(async () => {
+      expect(result.current).toMatchObject({
+        status: 'pending',
+        endpointName: 'getProductDetail',
+        isLoading: true,
+        isSuccess: false,
+        isError: false,
+        isFetching: true,
+      });
     });
   });
 });
