@@ -7,9 +7,7 @@ import { setSearchValue } from '../../redux/slice/products.slice';
 
 export default function Header(): JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { searchValue, dataSearch } = useAppSelector(
-    (state) => state.productSlice
-  );
+  const { searchValue, dataSearch } = useAppSelector((st) => st.productSlice);
   const { isOpen } = useAppSelector((state) => state.detailSlice);
   const [inputValue, setInputValue] = useState(
     searchParams.get('search') || searchValue

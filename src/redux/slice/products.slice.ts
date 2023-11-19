@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ProductList } from '../../types/interface';
 
-interface ProductsSlice {
+export interface ProductsSlice {
   dataSearch: {
     isLoading: boolean;
     dataResponse: ProductList | undefined;

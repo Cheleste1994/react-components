@@ -127,6 +127,62 @@ describe('Products details', () => {
     });
   });
 
+  it('should dispatch action', async () => {
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useLocation: { pathname: '/1' },
+    }));
+
+    const dispatch = jest.fn();
+
+    jest
+      .spyOn(require('../../../redux/hooks/hooks'), 'useAppDispatch')
+      .mockReturnValue(dispatch);
+
+    jest
+      .spyOn(
+        require('../../../redux/api/productsApi'),
+        'useGetProductDetailQuery'
+      )
+      .mockReturnValue({
+        data: mockData,
+        isLoading: false,
+        isError: undefined,
+      });
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <IdCard />
+      </MemoryRouter>
+    );
+    expect(dispatch).toHaveBeenCalled();
+  });
+
+  it('should not found if error', async () => {
+    jest.mock('react-router-dom', () => ({
+      ...jest.requireActual('react-router-dom'),
+      useLocation: { pathname: '/1' },
+    }));
+
+    jest
+      .spyOn(
+        require('../../../redux/api/productsApi'),
+        'useGetProductDetailQuery'
+      )
+      .mockReturnValue({
+        data: mockData,
+        isLoading: false,
+        isError: 'Error test',
+      });
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <IdCard />
+      </MemoryRouter>
+    );
+    expect(screen.getByText('Not found!')).toBeInTheDocument();
+  });
+
   it('Check that a loading indicator is displayed while fetching data', async () => {
     jest.mock('react-router-dom', () => ({
       ...jest.requireActual('react-router-dom'),
