@@ -3,13 +3,13 @@ import { Product } from '../../types/interface';
 
 export interface ProductDetailState {
   isLoading: boolean;
-  dataId: Product | undefined;
+  dataId: Product | null;
   isOpen: boolean;
 }
 
 const initialState: ProductDetailState = {
   isLoading: true,
-  dataId: undefined,
+  dataId: null,
   isOpen: false,
 };
 
@@ -23,7 +23,7 @@ const productDetail = createSlice({
       state.isOpen = true;
     },
     clearProductId: (state) => {
-      state.dataId = undefined;
+      state.dataId = null;
       state.isLoading = true;
       state.isOpen = false;
     },

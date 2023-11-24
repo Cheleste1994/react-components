@@ -1,6 +1,6 @@
-import React from 'react';
-import LogoLoad from '../../components/LogoLoad/LogoLoad';
-import mainStyles from '../HomePage/Home.module.scss';
+import LogoLoad from '../LogoLoad/LogoLoad';
+import mainStyles from '../../pages/Home.module.scss';
+import Link from 'next/link';
 
 export default function PageError(): JSX.Element {
   return (
@@ -10,6 +10,7 @@ export default function PageError(): JSX.Element {
         <div>
           <span>Page not found!</span>
         </div>
+        <Link href={'/'}>Home</Link>
       </main>
     </>
   );

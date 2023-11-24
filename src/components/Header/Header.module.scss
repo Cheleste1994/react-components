@@ -7,24 +7,31 @@
   align-items: center;
   padding: 0 20px;
 
-  div:first-child {
+  form:first-child {
     font-size: 2rem;
     user-select: none;
     cursor: pointer;
   }
 
-  div:last-child {
+  form:last-child {
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
 
-    img {
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-      filter: invert(1);
-      width: 30px;
-      &:hover {
-        transform: scale(1.1);
+    button {
+      background-color: transparent;
+      padding: 0;
+      border: none;
+      outline: none;
+
+      img {
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        filter: invert(1);
+        width: 30px;
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
 
