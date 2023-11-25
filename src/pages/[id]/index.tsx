@@ -34,7 +34,11 @@ const IdCard = ({
 
   return (
     <div className={styles.card}>
-      <div className={styles.popup} onClick={() => router.back()} />
+      <div
+        className={styles.popup}
+        onClick={() => router.back()}
+        data-testid="popup-closed"
+      />
       {!dataId && <div>Not found!</div>}
       {isLoading ? (
         <LogoLoad />

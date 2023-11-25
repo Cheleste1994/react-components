@@ -6,7 +6,7 @@ describe('Store', () => {
     const initialState: ProductsSlice = {
       dataSearch: {
         isLoading: true,
-        dataResponse: undefined,
+        dataResponse: null,
       },
       searchValue: '',
       page: 1,
@@ -20,7 +20,7 @@ describe('Store', () => {
   it('should return default Detail state when passed an empty action', () => {
     const initialState: ProductDetailState = {
       isLoading: true,
-      dataId: undefined,
+      dataId: null,
       isOpen: false,
     };
 

@@ -23,7 +23,7 @@ export default function Header({
   return (
     <header className={styles.header}>
       <div>React. Components</div>
-      <form onSubmit={handleForm}>
+      <form onSubmit={handleForm} data-testid="form-search">
         <button type="submit">
           <img
             src={svg.src}

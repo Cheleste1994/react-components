@@ -6,7 +6,7 @@ import detailReducer, {
 
 const initialState: ProductDetailState = {
   isLoading: true,
-  dataId: undefined,
+  dataId: null,
   isOpen: false,
 };
 

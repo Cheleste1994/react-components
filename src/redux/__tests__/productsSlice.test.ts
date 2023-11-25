@@ -8,7 +8,7 @@ import productsReducer, {
 const initialState: ProductsSlice = {
   dataSearch: {
     isLoading: true,
-    dataResponse: undefined,
+    dataResponse: null,
   },
   searchValue: '',
   page: 1,
