@@ -6,7 +6,7 @@ import {
 } from 'next/types';
 import { ParsedUrlQuery } from 'querystring';
 import { ApiResponseState } from '../../types/interface';
-import HomePage, { getServerSideProps } from '../index';
+import HomePage, { getServerSideProps } from '../../pages/index';
 
 jest.mock('next/router', () => jest.requireActual('next-router-mock'));
 

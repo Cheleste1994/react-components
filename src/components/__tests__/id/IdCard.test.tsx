@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import IdCard, { getServerSideProps } from '../../[id]';
+import IdCard, { getServerSideProps } from '../../../pages/[id]';
 import { MemoryRouterProvider } from 'next-router-mock/dist/MemoryRouterProvider';
 import mockRouter from 'next-router-mock';
 import {
