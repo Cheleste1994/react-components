@@ -1,54 +1,46 @@
-import React, { useState } from 'react';
 import styles from './Header.module.scss';
 import svg from '../../assets/search.svg';
-import { useSearchParams } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../redux/hooks/hooks';
-import { setSearchValue } from '../../redux/slice/products.slice';
 
-export default function Header(): JSX.Element {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { searchValue, dataSearch } = useAppSelector((st) => st.productSlice);
-  const { isOpen } = useAppSelector((state) => state.detailSlice);
-  const [inputValue, setInputValue] = useState(
-    searchParams.get('search') || searchValue
-  );
+import { RootState } from '../../redux/store';
+import { useRouter } from 'next/router';
+import { FormEvent } from 'react';
 
-  const dispatch = useAppDispatch();
+export default function Header({
+  initialState,
+}: {
+  initialState: RootState;
+}): JSX.Element {
+  const { dataSearch } = initialState.productSlice;
+  const { isOpen } = initialState.detailSlice;
+  const router = useRouter();
 
-  const handleSearchClick = (
-    event?: React.KeyboardEvent<HTMLInputElement>
-  ): void => {
-    if (!event || event?.code === 'Enter') {
-      const params = new URLSearchParams();
-      params.set('search', inputValue);
-      localStorage.setItem('inputValue', inputValue || '');
-      setSearchParams(params);
-      dispatch(setSearchValue({ inputValue }));
-    }
+  const handleForm = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    router.push(`/?search=${formData.get('search')}`);
   };
 
   return (
     <header className={styles.header}>
       <div>React. Components</div>
-      <div>
-        <img
-          src={svg}
-          alt="search"
-          onClick={() => !isOpen && handleSearchClick()}
-          data-testid="btn-search"
-          style={{ opacity: `${isOpen ? '0.5' : '1'}` }}
-        />
+      <form onSubmit={handleForm} data-testid="form-search">
+        <button type="submit">
+          <img
+            src={svg.src}
+            alt="search"
+            data-testid="btn-search"
+            style={{ opacity: `${isOpen ? '0.5' : '1'}` }}
+          />
+        </button>
         <input
           list="starWars"
           placeholder={dataSearch?.isLoading ? 'Loading...' : ''}
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
           disabled={!!dataSearch?.isLoading || isOpen}
-          onKeyDown={handleSearchClick}
+          name="search"
           data-testid="input-search"
           style={{ opacity: `${isOpen ? '0.5' : '1'}` }}
         />
-      </div>
+      </form>
     </header>
   );
 }

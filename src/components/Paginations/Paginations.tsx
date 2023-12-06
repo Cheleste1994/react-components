@@ -1,38 +1,26 @@
-import React, { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks/hooks';
-import { setPage } from '../../redux/slice/products.slice';
+import { useRouter } from 'next/router';
 import styles from './Paginations.module.scss';
 
 export default function Paginations(): JSX.Element {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const { dataSearch, page: pageNumber } = useAppSelector(
-    (state) => state.productSlice
-  );
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(setPage(Number(searchParams.get('page'))));
-  }, [dispatch, searchParams]);
-
-  const limit = Number(searchParams.get('limit')) || 10;
-  const skip = Number(searchParams.get('skip')) || 0;
+  const router = useRouter();
+  const page = Number(router.query?.page) || 1;
 
   const handleClickBtn = (value: string): void => {
-    const params = new URLSearchParams(searchParams);
+    const limit = Number(router.query?.limit) || 10;
+
+    const params = new URLSearchParams();
 
     if (value === 'prev') {
-      params.set('skip', `${Math.max(skip - limit, 0)}`);
+      params.set('page', `${page - 1}`);
     } else {
-      params.set('skip', `${skip + limit}`);
+      params.set('page', `${page + 1}`);
     }
-    const currentPage = Math.floor(Number(params.get('skip')) / limit) + 1;
 
-    params.set('page', `${currentPage}`);
+    const skip = (Number(params.get('page')) - 1) * limit;
+
+    params.set('skip', `${skip}`);
     params.set('limit', `${limit}`);
-    setSearchParams(params);
+    router.push(`?${params.toString()}`);
   };
 
   return (
@@ -42,17 +30,13 @@ export default function Paginations(): JSX.Element {
     >
       <button
         onClick={() => handleClickBtn('prev')}
-        disabled={skip === 0}
+        disabled={page === 1}
         data-testid="prev-page"
       >
         Prev
       </button>
-      <span data-testid="page-display">{pageNumber}</span>
-      <button
-        onClick={() => handleClickBtn('next')}
-        disabled={skip >= Number(dataSearch?.dataResponse?.total)}
-        data-testid="next-page"
-      >
+      <span data-testid="page-display">{page}</span>
+      <button onClick={() => handleClickBtn('next')} data-testid="next-page">
         Next
       </button>
     </div>

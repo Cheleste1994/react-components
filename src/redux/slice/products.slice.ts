@@ -4,7 +4,7 @@ import { ProductList } from '../../types/interface';
 export interface ProductsSlice {
   dataSearch: {
     isLoading: boolean;
-    dataResponse: ProductList | undefined;
+    dataResponse: ProductList | null;
   };
   searchValue: string;
   page: number;
@@ -13,9 +13,9 @@ export interface ProductsSlice {
 const initialState: ProductsSlice = {
   dataSearch: {
     isLoading: true,
-    dataResponse: undefined,
+    dataResponse: null,
   },
-  searchValue: localStorage.getItem('inputValue') || '',
+  searchValue: '',
   page: 1,
 };
 
@@ -27,7 +27,7 @@ const productSlice = createSlice({
       state,
       action: PayloadAction<{
         isLoading: boolean;
-        productList: ProductList | undefined;
+        productList: ProductList | null;
       }>
     ) => {
       state.dataSearch.isLoading = action.payload?.isLoading;

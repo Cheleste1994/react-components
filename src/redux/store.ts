@@ -1,7 +1,8 @@
-import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import productsApi from './api/productsApi';
 import productSlice from './slice/products.slice';
 import detailSlice from './slice/detail.slice';
+import { createWrapper } from 'next-redux-wrapper';
 
 export const store = configureStore({
   reducer: {
@@ -14,12 +15,8 @@ export const store = configureStore({
 });
 
 export type RootState = ReturnType<typeof store.getState>;
-
 export type AppDispatch = typeof store.dispatch;
 
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+export const makeStore = () => store;
+
+export const wrapper = createWrapper(makeStore, { debug: true });
