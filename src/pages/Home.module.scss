@@ -1,0 +1,59 @@
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 20px;
+  position: relative;
+
+  a {
+    color: white;
+  }
+
+  > :first-child {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    max-width: 900px;
+    width: 100%;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 5px solid #ffffff8a;
+      border-radius: 20px;
+      gap: 10px;
+      width: 100%;
+      padding: 20px;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
+  }
+}
+
+.loading {
+  opacity: 0.3;
+
+  * {
+    opacity: 0.3;
+  }
+}
